@@ -1,0 +1,29 @@
+{
+  "name": "health_viz_project",
+  "authors": [
+    "Xiaoxue Zhang"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "d3": "^4.3.0",
+    "topojson": "^2.1.0",
+    "d3kit": "^3.1.1",
+    "d3kit-gridmap": "^1.1.0",
+    "selectize": "^0.12.4",
+    "turfjs": "*",
+    "highcharts": "^5.0.2",
+    "munkres-js": "^1.2.1",
+    "colorbrewer": "^1.0.0"
+  }
+}

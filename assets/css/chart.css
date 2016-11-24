@@ -1,0 +1,108 @@
+/*=================Box plot===================*/
+.whisker{
+    stroke-width: 2;
+}
+.box rect{
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.whisker line,
+.median line{
+    stroke-width: 2px;
+}
+
+
+circle {
+    /*fill: black;*/
+    stroke: none;
+    shape-rendering: geometricPrecision;
+}
+
+circle:hover {
+    fill: orange;
+    stroke: orange;
+    opacity: 1;
+}
+
+.outlier {
+    /* stroke: black; */
+    /* stroke-width: 2px; */
+}
+
+.point {
+    opacity: 0.3;
+}
+
+.axis path {
+    fill: none;
+    /*stroke: black;*/
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+    fill: none;
+    stroke: #C6CCD3;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 10px;
+}
+
+.axis text {
+    font: 10px Roboto;
+    fill: #041725;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #C6CCD3;
+    shape-rendering: crispEdges;
+}
+
+
+/*=================Map==================*/
+.leaflet-container .leaflet-control-attribution {
+    font-family: 'Roboto', sans-serif;
+}
+/*
+ * These CSS rules affect the tooltips within maps with the custom-popup
+ * class. See the full CSS for all customizable options:
+ * https://github.com/mapbox/mapbox.js/blob/001754177f3985c0e6b4a26e3c869b0c66162c99/theme/style.css#L321-L366
+*/
+.custom-popup .leaflet-popup-content-wrapper {
+    background: #041725;
+    color:#fff;
+    font-size:12px;
+    line-height:18px;
+    font-family: 'Roboto', sans-serif;
+}
+.custom-popup .leaflet-popup-content-wrapper a {
+    color:rgba(255,255,255,0.5);
+}
+.custom-popup .leaflet-popup-content{
+    padding: 10px 15px 10px 10px;
+}
+.custom-popup .leaflet-popup-content .tract-name{
+    font-weight:600;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+.custom-popup .leaflet-popup-content .label{
+    opacity: 0.5;
+    padding-right: 5px;
+}
+.custom-popup .leaflet-popup-tip-container {
+    width:30px;
+    height:15px;
+}
+.custom-popup .leaflet-popup-tip {
+    border-left:15px solid transparent;
+    border-right:15px solid transparent;
+    border-top:15px solid #2c3e50;
+    border: none;
+}
