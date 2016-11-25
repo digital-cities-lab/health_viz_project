@@ -16,7 +16,7 @@ var hi = {
     healthData: {},
     facilityProjection: {},
     gridMapData: {},
-    boundaryShapeData: {},
+    boundaryData: {},
     map: null,
     geoLayer: null,
     popupLayer : null,
@@ -31,8 +31,20 @@ var hi = {
     currentIndicatorCode: 'Median_household_income',
     currentIndicatorName: 'Median Household Income',
     currentTractId: null,
+    currentMapType: 'grid',
     init: function(){
         var _this = this;
+
+        //loading indicator
+        NProgress.configure({ showSpinner: false });
+        NProgress.configure({ minimum: 0.1 });
+        $(document)
+            .ajaxStart(function() {
+                NProgress.start();
+            })
+            .ajaxComplete(function() {
+                NProgress.done();
+            });
 
         //selectize
         var selectList = {};
@@ -43,18 +55,18 @@ var hi = {
             });
         });
 
-        $.when($.getJSON('data/health_inside_atlanta.json'), $.getJSON('data/grid.geojson'), $.getJSON('data/boundary.geojson'), $.getJSON('data/facility_projection.json')).done(function(a1, a2, a3, a4){
+        $.when($.getJSON('data/health_inside_atlanta.json'), $.getJSON('data/grid.geojson'), $.getJSON('data/facility_projection.json')).done(function(a1, a2, a3){
             //cache data to show and update charts
             _this.healthData = a1[0];
             _this.gridMapData = a2[0];
-            _this.boundaryShapeData = a3[0];
-            _this.facilityProjection = a4[0];
+            _this.facilityProjection = a3[0];
 
             _this.groupThreshold = _this.process.getGroupThreshold(_this.currentIndicatorCode);
 
             //show map and charts
             _this.showBoxplot();
-            _this.showMap();
+            _this.showGridMap();
+            //_this.showBoundaryMap();
         });
 
         //add events
@@ -79,14 +91,40 @@ var hi = {
             //group data
             _this.groupThreshold = _this.process.getGroupThreshold(_this.currentIndicatorCode);
 
-            console.log(_this.groupThreshold);
-
             //show map and charts
             _this.updateBoxPlot();
             _this.updateMap();
 
             //change legend title
             $legend.find('.legend-title').html(_this.currentIndicatorName);
+
+            //scroll panel to related section
+            /*$('.panel').animate({
+                scrollTop: $("#chart-component-" + _this.currentIndicatorId).offset().top
+            }, 1000);*/
+
+            $("#chart-component-" + _this.currentIndicatorId).ScrollTo({
+                duration: 1000,
+                easing: 'linear'
+            });
+        });
+
+        $('#map-type-select').on('change', function(e){
+            e.preventDefault();
+
+            var type = $(this).val();
+            _this.currentMapType = type;
+
+            //clear layer first
+            if(_this.geoLayer !== null){
+                _this.geoLayer.clearLayers();
+            }
+
+            if(type === 'grid'){
+                _this.showGridMap();
+            }else{
+                _this.showBoundaryMap();
+            }
         });
     },
     //show default overview charts on the right panel
@@ -146,7 +184,6 @@ var hi = {
                         }
                     }
                 }
-                console.log(matrixData);
             });
         });
 
@@ -173,10 +210,14 @@ var hi = {
 
         _this.showBoxplot();
     },
-    showMap: function(){
+    showGridMap: function(){
         var _this = hi;
 
-        _this.charts.createGridMap();
+        if(_this.map === null){
+            _this.charts.createMap();
+        }
+        //create grid layer after map initialized
+        _this.charts.createGeoLayer();
     },
     updateMap: function(){
         var _this = hi;
@@ -184,7 +225,28 @@ var hi = {
         if(_this.geoLayer !== null){
             _this.geoLayer.clearLayers();
         }
-        _this.charts.createGridLayer();
+        _this.charts.createGeoLayer();
+    },
+    showBoundaryMap: function(){
+        var _this = hi;
+
+        if(_this.map === null){
+            _this.charts.createMap();
+        }
+
+        if($.isEmptyObject(_this.boundaryData)){
+
+            $.when($.getJSON('data/boundaries.geojson')).done(function(a1){
+                //cache data to show and update charts
+                _this.boundaryData = a1;
+
+                //show map and charts
+                _this.charts.createGeoLayer();
+            });
+
+        }else{
+            _this.charts.createGeoLayer();
+        }
     },
     charts: {
         createBoxplot: function(options){
@@ -411,7 +473,8 @@ var hi = {
                         if (layer.feature.properties.OBJECTID == _this.currentTractId) {
                             originColor = layer.options.fillColor;
                             layer.setStyle({
-                                fillColor: 'orange'
+                                fillColor: 'orange',
+                                color: 'orange'
                             });
 
                             //show popup
@@ -432,7 +495,8 @@ var hi = {
                     _this.geoLayer.eachLayer(function(layer) {
                         if (layer.feature.properties.OBJECTID == _this.currentTractId) {
                             layer.setStyle({
-                                fillColor: originColor
+                                fillColor: originColor,
+                                color: originColor
                             });
 
                             //close popup
@@ -456,7 +520,7 @@ var hi = {
 
             showBoxPlot(settings.matrixData, settings.matrixObject, settings.data);
         },
-        createGridMap: function(){
+        createMap: function(){
             var _this = hi;
             var mapStyleUrl = 'mapbox://styles/xiaoxuezhang/civfvp28i00142jrergqofl77';
 
@@ -473,32 +537,31 @@ var hi = {
 
             //global map
             _this.map = map;
-
-            //create grid layer after map initialized
-            _this.charts.createGridLayer();
-            //_this.charts.createBoundaryLayer(boundaryjson);
-
         },
-        createBoundaryLayer: function(boundaryjson){
+        createBoundaryLayer: function(){
             var _this = hi;
 
-            L.mapbox.featureLayer().setGeoJSON(boundaryjson).setStyle({
+            /*L.mapbox.featureLayer().setGeoJSON(boundaryjson).setStyle({
                 fillOpacity: 0,
                 weight: 1,
                 color: '#B5BDC1'
-            }).addTo(_this.map);
+            }).addTo(_this.map);*/
+
+
         },
-        createGridLayer: function(){
+        createGeoLayer: function(){
             var _this = hi;
-            var gridMapData = _this.gridMapData;
+            var geoData = _this.currentMapType === 'carto' ? _this.boundaryData : _this.gridMapData;
+            var type = _this.currentMapType;
             var map = _this.map;
             var layerPopup = null;
             var chartCode = _this.currentIndicatorCode;
             var relationObj = _this.process.transformToObject();
-            var originColor = '#ffffff';
+            var originStyle = {};
+
 
             //grid style
-            gridMapData.features.forEach(function(cell, index) {
+            geoData.features.forEach(function(cell, index) {
                 //get info
                 var tractIndex = relationObj[index];
                 cell.properties = _this.healthData[tractIndex];
@@ -507,31 +570,44 @@ var hi = {
                 var groupIndex = _this.process.getGroupIndex(cellVal);
                 var color = _this.groupColors[groupIndex];
 
-                cell.properties.style = {
-                    fillColor: color,
-                    fillOpacity: 0.8,
-                    weight: 1,
-                    opacity: 0,
-                    color: 'white'
-                };
+                if(type === 'carto'){
+                    cell.properties.style = {
+                        fillColor: color,
+                        fillOpacity: 1,
+                        weight: 2,
+                        opacity: 1,
+                        color: color
+                    };
+                }else{
+                    cell.properties.style = {
+                        fillColor: color,
+                        fillOpacity: 1,
+                        weight: 2,
+                        opacity: 0,
+                        color: 'white'
+                    };
+                }
             });
 
             //apply styles and events
-            _this.geoLayer = L.geoJson(gridMapData, {onEachFeature: onEachFeature})
+            _this.geoLayer = L.geoJson(geoData, {onEachFeature: onEachFeature})
                 .eachLayer(function(l) {
                     l.setStyle(l.feature.properties.style);
                 })
                 .addTo(map);
 
+
+
             //highlight feature when hovering
             function highlightFeature(e) {
                 var layer = e.target;
-                originColor = layer.options.fillColor;
+                originStyle = layer.options;
 
                 //change highlight style
                 layer.setStyle({
                     fillOpacity: 1,
-                    fillColor: 'orange'
+                    fillColor: 'orange',
+                    color: 'orange'
                 });
 
                 layerPopup = _this.charts.openPopup(layer);
@@ -548,12 +624,13 @@ var hi = {
 
             //reset highlight
             function resetHighlight(e) {
-                //gridjson.resetStyle(e.target);
+                //_this.geoLayer.resetStyle(e.target);
                 var layer = e.target;
 
                 layer.setStyle({
-                    fillOpacity: 0.8,
-                    fillColor: originColor
+                    //fillOpacity: 0.8,
+                    color: originStyle.color,
+                    fillColor: originStyle.fillColor
                 });
 
                 //close popup
@@ -564,7 +641,6 @@ var hi = {
                     .attr('fill', function(d){ return d.color;  })
                     .attr('opacity', 0.3)
                     .attr('r', 2.5);
-
             }
 
             function onEachFeature(feature, layer) {
@@ -575,9 +651,6 @@ var hi = {
             }
 
             //L.mapbox.featureLayer().setGeoJSON(gridjson).addTo(map);
-
-        },
-        createCartoLayer: function(){
 
         },
         openPopup: function(layer){
@@ -605,11 +678,11 @@ var hi = {
             var groupString = properties.GROUP === '9' ? 'Undefined Class' : _this.groups[properties.GROUP - 0 - 1];
             var content = '<div class="tract-name">TRACT ' + properties.NAME10 + '</div>' +
                 '<div class="properties>">' +
-                '<span class="label">Income Class: </span><span class="property-cnt">' + groupString + '</span>' +
+                '<span class="label">' + _this.currentIndicatorName + ': </span><span class="property-cnt">' + properties[_this.currentIndicatorCode] + '</span>' +
                 '</div>';
 
             //show detail
-            _this.popupLayer = L.popup({closeButton: false, offset: [0, 0]})
+            _this.popupLayer = L.popup({closeButton: false, offset: [0, -15]})
                 .setLatLng([center[1], center[0]])
                 .setContent(content)
                 .openOn(_this.map);
@@ -644,7 +717,7 @@ var hi = {
                 hospital: {}
             };
 
-            $.when($.getJSON('data/emergency_service_facilities.json'), $.getJSON('data/hospital_community_facilities.json'), $.getJSON('data/poverty.geojson')).done(function( a1, a2, a3 ) {
+            $.when($.getJSON('data/emergency_service_facilities.json'), $.getJSON('data/hospital_community_facilities.json'), $.getJSON('data/boundaries.geojson')).done(function( a1, a2, a3 ) {
                 var emergencyData = a1[0];
                 var hospitalData = a2[0];
                 var geoData = a3[0];
@@ -697,7 +770,6 @@ var hi = {
                 }
 
                 console.log(data);
-                //console.log(facilityData);
             });
         },
         getProjection: function(){
@@ -707,7 +779,7 @@ var hi = {
             var gridPtsArray = [];
 
             //get data
-            $.when($.getJSON('data/poverty.geojson'), $.getJSON('data/grid.geojson')).done(function(a1, a2){
+            $.when($.getJSON('data/boundaries.geojson'), $.getJSON('data/grid.geojson')).done(function(a1, a2){
                 ready(a1[0], a2[0]);
             });
 

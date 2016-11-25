@@ -6,6 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Hind:400,500|Montserrat|Roboto" rel="stylesheet">
     <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
 
+    <link href="bower_components/nprogress/nprogress.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <title>Health Inequity</title>
 </head>
@@ -32,7 +33,7 @@
         </select>
         <span class="view-by">
             <label class="label">View by</label>
-            <select class="selectbox">
+            <select class="selectbox" id="map-type-select">
                 <option value="grid">Grid Map</option>
                 <option value="carto">Cartographic Map</option>
             </select>
@@ -56,49 +57,49 @@
         <h2>Health Observatory in Atlanta</h2>
     </div>
     <div class="panel-content">
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-income">
             <div class="chart-title">
                 <h3>Median Household Income</h3>
             </div>
             <div class="chart-content" id="chart-income">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-weight">
             <div class="chart-title">
                 <h3>Low Birth Weight Babies Born</h3>
             </div>
             <div class="chart-content" id="chart-weight">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-teen">
             <div class="chart-title">
                 <h3>Teen Pregnancy</h3>
             </div>
             <div class="chart-content" id="chart-teen">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-premature">
             <div class="chart-title">
                 <h3>Premature Births</h3>
             </div>
             <div class="chart-content" id="chart-premature">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-insurance">
             <div class="chart-title">
                 <h3>Health Insurance Coverage</h3>
             </div>
             <div class="chart-content" id="chart-insurance">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-hospital">
             <div class="chart-title">
                 <h3>Access to Hospital Community Facilities</h3>
             </div>
             <div class="chart-content" id="chart-hospital">
             </div>
         </div>
-        <div class="chart-component">
+        <div class="chart-component" id="chart-component-emergency">
             <div class="chart-title">
                 <h3>Access to Emergency Medical Service Community Facilities</h3>
             </div>
@@ -118,6 +119,8 @@
 <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
 <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
 <script src="bower_components/munkres-js/munkres.js"></script>
+<script src="bower_components/jquery-scrollto/src/static/lib/jquery-scrollto.js"></script>
+<script src="bower_components/nprogress/nprogress.js"></script>
 <script src="assets/js/hi.js"></script>
 <script src="assets/js/main.js"></script>
 

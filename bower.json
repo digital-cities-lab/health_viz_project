@@ -24,6 +24,7 @@
     "turfjs": "*",
     "highcharts": "^5.0.2",
     "munkres-js": "^1.2.1",
-    "colorbrewer": "^1.0.0"
+    "colorbrewer": "^1.0.0",
+    "jquery-scrollto": "^1.4.6"
   }
 }
