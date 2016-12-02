@@ -5,8 +5,6 @@ var uglify = require('gulp-uglify');
 var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-minify-css');
 var rev = require('gulp-rev');
-var csv2json = require('gulp-csv2json');
-var rename = require('gulp-rename');
 var jsonmin = require('gulp-jsonmin');
 var newer = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
@@ -16,16 +14,8 @@ var browserSync = require('browser-sync').create();
 
 gulp.task('default', ['usemin', 'copy', 'images', 'datamin']);
 
-//csv to json
-gulp.task('csv2json', function () {
-    return gulp.src('data/*.csv')
-        .pipe(csv2json({}))
-        .pipe(rename({extname: '.json'}))
-        .pipe(gulp.dest('data'));
-});
-
 gulp.task('clean', function () {
-    return gulp.src(['doc/assets/css', 'doc/assets/js'], {read: false})
+    return gulp.src(['docs/assets/css', 'docs/assets/js'], {read: false})
         .pipe(clean());
 });
 gulp.task('usemin', ['clean'], function() {
@@ -53,7 +43,7 @@ gulp.task('images', function() {
 });
 
 gulp.task('datamin', function() {
-    return gulp.src('data/*.json')
+    return gulp.src(['data/*.json', 'data/*.geojson'])
         .pipe(newer('data/*.json'))
         .pipe(jsonmin())
         .pipe(gulp.dest('docs/data'));

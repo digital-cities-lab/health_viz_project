@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+
+    <link href="https://fonts.googleapis.com/css?family=Hind:400,500|Montserrat|Roboto" rel="stylesheet">
+    <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+
+    <link rel="stylesheet" href="./assets/css/main-13f3af8100.css"/>
+    <title>Health Inequity</title>
+</head>
+<body>
+<div id="header" class="header">
+    <h1 class="logo">
+        <a href="javascript;" title="Return Home">
+            <img src="assets/img/logo.svg"/>
+        </a>
+    </h1>
+    <div class="filter">
+        <div class="searchbox">
+            <input type="text" name="" id="" class="input" placeholder="Search Your Location"/>
+            <a href="javascript:;" class="icon-search"></a>
+        </div>
+        <select class="selectbox selectbox-long" id="indicator-select">
+            <option value="income">Median Household Income</option>
+            <option value="weight">Low Birth Weight Babies Born</option>
+            <option value="teen">Teen Pregnancy</option>
+            <option value="premature">Premature Births</option>
+            <option value="insurance">Health Insurance Coverage</option>
+            <!--<option value="hospital">Access to Hospital Community Facilities</option>-->
+            <!--<option value="emergency">Access to Emergency Medical Service Community Facilities</option>-->
+        </select>
+        <span class="view-by">
+            <label class="label">View by</label>
+            <select class="selectbox" id="map-type-select">
+                <option value="grid">Grid Map</option>
+                <option value="carto">Cartographic Map</option>
+            </select>
+        </span>
+    </div>
+</div>
+<div id="map" class="map custom-popup"></div>
+<div class="legend" id="legend">
+    <div class="legend-title">Median Household Income</div>
+    <ul>
+        <li><i class="icon-rect top-fifth" id="top-fifth"></i> <label for="top-fifth">Top Fifth</label></li>
+        <li><i class="icon-rect upper-middle" id="upper-middle"></i> <label for="upper-middle">Upper Middle</label></li>
+        <li><i class="icon-rect middle-class" id="middle-class"></i> <label for="middle-class">Middle</label></li>
+        <li><i class="icon-rect lower-middle" id="lower-middle"></i> <label for="lower-middle">Lower Middle</label></li>
+        <li><i class="icon-rect bottom-fifth" id="bottom-fifth"></i> <label for="bottom-fifth">Bottom Fifth</label></li>
+        <li><i class="icon-rect undefined" id="undefined"></i> <label for="undefined">Undefined</label></li>
+    </ul>
+</div>
+<div class="panel" id="panel">
+    <div class="panel-header">
+        <h2>Health Observatory in Atlanta</h2>
+    </div>
+    <div class="panel-content">
+        <div class="chart-component" id="chart-component-income">
+            <div class="chart-title">
+                <h3>Median Household Income</h3>
+            </div>
+            <div class="chart-content" id="chart-income">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-weight">
+            <div class="chart-title">
+                <h3>Low Birth Weight Babies Born</h3>
+            </div>
+            <div class="chart-content" id="chart-weight">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-teen">
+            <div class="chart-title">
+                <h3>Teen Pregnancy</h3>
+            </div>
+            <div class="chart-content" id="chart-teen">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-premature">
+            <div class="chart-title">
+                <h3>Premature Births</h3>
+            </div>
+            <div class="chart-content" id="chart-premature">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-insurance">
+            <div class="chart-title">
+                <h3>Health Insurance Coverage</h3>
+            </div>
+            <div class="chart-content" id="chart-insurance">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-hospital">
+            <div class="chart-title">
+                <h3>Access to Hospital Community Facilities</h3>
+            </div>
+            <div class="chart-content" id="chart-hospital">
+            </div>
+        </div>
+        <div class="chart-component" id="chart-component-emergency">
+            <div class="chart-title">
+                <h3>Access to Emergency Medical Service Community Facilities</h3>
+            </div>
+            <div class="chart-content" id="chart-emergency">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
+<script src="./assets/js/plugins-26f9f55322.js"></script>
+<script src="./assets/js/main-f9d0931b54.js"></script>
+</body>
+</html>

@@ -6,8 +6,14 @@
     <link href="https://fonts.googleapis.com/css?family=Hind:400,500|Montserrat|Roboto" rel="stylesheet">
     <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
 
+    <!-- build:css ./assets/css/main.css -->
+    <link href="bower_components/reset-css/reset.css" rel="stylesheet" />
     <link href="bower_components/nprogress/nprogress.css" rel="stylesheet" />
+    <link href="assets/css/fontello.css" rel="stylesheet" />
+    <link href="assets/css/selectize.css" rel="stylesheet" />
+    <link href="assets/css/chart.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
+    <!-- endbuild -->
     <title>Health Inequity</title>
 </head>
 <body>
@@ -110,19 +116,18 @@
 </div>
 
 <script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<!--<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>-->
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<!--<script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>-->
-<!--<script src="bower_components/turfjs/turf.min.js"></script>-->
 <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
+<!-- build:js ./assets/js/plugins.js -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
 <script src="bower_components/munkres-js/munkres.js"></script>
 <script src="bower_components/jquery-scrollto/src/static/lib/jquery-scrollto.js"></script>
 <script src="bower_components/nprogress/nprogress.js"></script>
+<!-- endbuild -->
+<!-- build:js ./assets/js/main.js -->
 <script src="assets/js/hi.js"></script>
 <script src="assets/js/main.js"></script>
-
+<!-- endbuild -->
 </body>
 </html>
