@@ -17,7 +17,7 @@ body{
     font-family: 'Roboto', sans-serif;
     color: #445266;
     font-size: 12px;
-    background-color: #F0F2F4;
+    background-color: #fff;
 }
 a{
     color: #445266;
@@ -196,7 +196,7 @@ h3{
     box-shadow: 0 1px 4px rgba(10,20,30,0.3);
     padding: 10px 20px 10px 10px;
     z-index: 1;
-    display: none;
+    /*display: none;*/
 }
 .legend .legend-title{
     font-weight: bold;
@@ -271,6 +271,7 @@ h3{
 .panel .range-slider{
     padding: 20px 20px 15px 20px;
     background-color: #F0F2F4;
+    max-height: 140px;
 }
 .panel .range-slider h3{
     margin-bottom: 15px;

@@ -23,7 +23,7 @@ hi.charts = {
             width: 480,
             height: 240,
             margin: {top: 20, right: 8, bottom: 20, left: 9},
-            colors: _this.groupColors,
+            colors: _this.currentColors,
             data: [],
             matrixObject: []
         }, options);
@@ -295,9 +295,11 @@ hi.charts = {
         showBoxPlot(settings.matrixObject, settings.data);
     },
     initTooltip: function(){
-        d3.select('#panel').append("div")
-            .attr("class", "tooltip")
-            .style("display", 'none');
+        if($('#panel .tooltip').length === 0){
+            d3.select('#panel').append("div")
+                .attr("class", "tooltip")
+                .style("display", 'none');
+        }
     },
     setHighlight: function(selector, data){
         var _this = hi;
@@ -381,7 +383,7 @@ hi.charts = {
             data.push(item.length);
         });
 
-        $('#chart-legend').html(template('chart-legend', {data: data}));
+        $('#chart-legend').html(template('chart-legend', {data: data, colors: _this.currentColors}));
     },
     addEventListener: function(){
         var _this = hi;
@@ -395,7 +397,6 @@ hi.charts = {
             _this.charts.createBoxplot({
                 selector: '#chart-' + chartId,
                 type: type,
-                data: _this.chartData.data[chartId],
                 matrixObject: _this.chartData.matrixObject[chartId]
             });
 

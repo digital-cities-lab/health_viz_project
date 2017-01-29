@@ -45,7 +45,7 @@ hi.geomap = {
 
             var cellVal = cell.properties[chartCode] - 0;
             var groupIndex = _this.process.getGroupIndex(cellVal);
-            var color = _this.groupColors[groupIndex];
+            var color = _this.currentColors[groupIndex];
 /*
             if(type === 'carto'){
                 cell.properties.style = {
