@@ -26,5 +26,9 @@
     "munkres-js": "^1.2.1",
     "colorbrewer": "^1.0.0",
     "jquery-scrollto": "^1.4.6"
+  },
+  "dependencies": {
+    "ion.rangeSlider": "^2.1.6",
+    "numeral": "numeraljs#^2.0.4"
   }
 }

@@ -11,6 +11,9 @@
     <link href="bower_components/nprogress/nprogress.css" rel="stylesheet" />
     <link href="assets/css/fontello.css" rel="stylesheet" />
     <link href="assets/css/selectize.css" rel="stylesheet" />
+    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet" />
+    <!--<link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" />-->
+    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.skinHTML5.css" rel="stylesheet" />
     <link href="assets/css/chart.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <!-- endbuild -->
@@ -18,11 +21,16 @@
 </head>
 <body>
 <div id="header" class="header">
-    <h1 class="logo">
-        <a href="javascript;" title="Return Home">
-            <img src="assets/img/logo.svg"/>
-        </a>
-    </h1>
+    <div class="help">
+        <a href="javascript:;"><i class="icon-help-circled icon"></i> Help</a>
+    </div>
+    <a href="javascript;" title="Return Home" class="logo">
+        <img src="assets/img/logo.svg"/>
+        <div class="h-group">
+            <h1>Health Observatory</h1>
+            <div class="subtitle">In Atlanta, Georgia</div>
+        </div>
+    </a>
     <div class="filter">
         <div class="searchbox">
             <input type="text" name="" id="" class="input" placeholder="Search Your Location"/>
@@ -47,67 +55,87 @@
     </div>
 </div>
 <div id="map" class="map custom-popup"></div>
-<div class="legend" id="legend">
-    <div class="legend-title">Median Household Income</div>
-    <ul>
-        <li><i class="icon-rect top-fifth" id="top-fifth"></i> <label for="top-fifth">Top Fifth</label></li>
-        <li><i class="icon-rect upper-middle" id="upper-middle"></i> <label for="upper-middle">Upper Middle</label></li>
-        <li><i class="icon-rect middle-class" id="middle-class"></i> <label for="middle-class">Middle</label></li>
-        <li><i class="icon-rect lower-middle" id="lower-middle"></i> <label for="lower-middle">Lower Middle</label></li>
-        <li><i class="icon-rect bottom-fifth" id="bottom-fifth"></i> <label for="bottom-fifth">Bottom Fifth</label></li>
-        <li><i class="icon-rect undefined" id="undefined"></i> <label for="undefined">Undefined</label></li>
-    </ul>
+<div class="map-legend legend" id="legend">
+
 </div>
 <div class="panel" id="panel">
-    <div class="panel-header">
-        <h2>Health Observatory in Atlanta</h2>
+    <div class="range-slider">
+        <h3>Median Household Income ($)</h3>
+        <input type="text" name="example_name" value="" id="range-slider"/>
+    </div>
+    <div class="chart-legend legend" id="chart-legend">
     </div>
     <div class="panel-content">
         <div class="chart-component" id="chart-component-income">
             <div class="chart-title">
-                <h3>Median Household Income</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="income">Dollars</div>
+                </div>
+                <h3>Median Household Income, 2008-2012</h3>
             </div>
             <div class="chart-content" id="chart-income">
             </div>
         </div>
         <div class="chart-component" id="chart-component-weight">
             <div class="chart-title">
-                <h3>Low Birth Weight Babies Born</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="weight">Persons</div>
+                    <div class="button" data-type="pct" data-chart-id="weight">Percentage</div>
+                </div>
+                <h3>Low Birthweight Births, 2008-2012</h3>
             </div>
             <div class="chart-content" id="chart-weight">
             </div>
         </div>
         <div class="chart-component" id="chart-component-teen">
             <div class="chart-title">
-                <h3>Teen Pregnancy</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="teen">Persons</div>
+                    <div class="button" data-type="pct" data-chart-id="teen">Percentage</div>
+                </div>
+                <h3>Teen Pregnancy, 2008-2012</h3>
             </div>
             <div class="chart-content" id="chart-teen">
             </div>
         </div>
         <div class="chart-component" id="chart-component-premature">
             <div class="chart-title">
-                <h3>Premature Births</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="premature">Persons</div>
+                    <div class="button" data-type="pct" data-chart-id="premature">Percentage</div>
+                </div>
+                <h3>Premature Births, 2008-2012</h3>
             </div>
             <div class="chart-content" id="chart-premature">
             </div>
         </div>
         <div class="chart-component" id="chart-component-insurance">
             <div class="chart-title">
-                <h3>Health Insurance Coverage</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="insurance">Persons</div>
+                    <div class="button" data-type="pct" data-chart-id="insurance">Percentage</div>
+                </div>
+                <h3>Population without Health Insurance, 2008-2012</h3>
             </div>
             <div class="chart-content" id="chart-insurance">
             </div>
         </div>
         <div class="chart-component" id="chart-component-hospital">
             <div class="chart-title">
-                <h3>Access to Hospital Community Facilities</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="hospital">Facilities</div>
+                </div>
+                <h3>Hospital Community Facilities, 2012</h3>
             </div>
             <div class="chart-content" id="chart-hospital">
             </div>
         </div>
         <div class="chart-component" id="chart-component-emergency">
             <div class="chart-title">
-                <h3>Access to Emergency Medical Service Community Facilities</h3>
+                <div class="button-group">
+                    <div class="button active" data-type="num" data-chart-id="emergency">Facilities</div>
+                </div>
+                <h3>Emergency Medical Service Community Facilities, 2012</h3>
             </div>
             <div class="chart-content" id="chart-emergency">
             </div>
@@ -124,9 +152,15 @@
 <script src="bower_components/munkres-js/munkres.js"></script>
 <script src="bower_components/jquery-scrollto/src/static/lib/jquery-scrollto.js"></script>
 <script src="bower_components/nprogress/nprogress.js"></script>
+<script src="bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+<script src="bower_components/numeral/numeral.js"></script>
 <!-- endbuild -->
 <!-- build:js ./assets/js/main.js -->
+<script src="tpl/build/template.js"></script>
 <script src="assets/js/hi.js"></script>
+<script src="assets/js/hi.geomap.js"></script>
+<script src="assets/js/hi.chart.js"></script>
+<script src="assets/js/hi.process.js"></script>
 <script src="assets/js/main.js"></script>
 <!-- endbuild -->
 </body>

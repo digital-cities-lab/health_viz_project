@@ -1,0 +1,52 @@
+<div class="map-popup">
+    <div class="title">
+        <!--<div class="class">
+            Total Population: {{total_pop}}
+        </div>-->
+        <div class="tract-name">{{tract_name}} (POP. {{total_pop}})</div>
+    </div>
+
+    <div class="income">{{income.name}}: <strong>${{income.num}}</strong></div>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="indicator">Health Indicator</th>
+            <th>NUM.</th>
+            <th>PCT.</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="indicator">{{weight.name}}</td>
+            <td>{{weight.num}}</td>
+            <td>{{weight.pct}}</td>
+        </tr>
+        <tr>
+            <td class="indicator">{{teen.name}}</td>
+            <td>{{teen.num}}</td>
+            <td>{{teen.pct}}</td>
+        </tr>
+        <tr>
+            <td class="indicator">{{premature.name}}</td>
+            <td>{{premature.num}}</td>
+            <td>{{premature.pct}}</td>
+        </tr>
+        <tr>
+            <td class="indicator">{{insurance.name}}</td>
+            <td>{{insurance.num}}</td>
+            <td>{{insurance.pct}}</td>
+        </tr>
+        <tr>
+            <td class="indicator">{{hospital.name}}</td>
+            <td>{{hospital.num}}</td>
+            <td>MAX: {{hospital.max}}</td>
+        </tr>
+        <tr>
+            <td class="indicator">{{emergency.name}}</td>
+            <td>{{emergency.num}}</td>
+            <td>MAX: {{emergency.max}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

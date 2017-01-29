@@ -1,0 +1,21 @@
+<div class="chart-popup">
+    {{data}}
+    <div class="tract-name">
+        {{data.tract_name}}
+    </div>
+    <div class="tract-data">
+        <p>{{data[chartId].name}}:  <strong>{{data[chartId].num}}</strong></p>
+        {{if chartId == 'income'}}
+        {{else if chartId == 'insurance'}}
+        <p>Percentage:  <strong>{{data[chartId].pct}}</strong></p>
+        <p>Total Population:  <strong>{{data.total_pop}}</strong></p>
+        {{else if chartId == 'hospital'}}
+        <p>Maximum of Facilities in a Tract:  <strong>{{data[chartId].max}}</strong></p>
+        {{else if chartId == 'emergency'}}
+        <p>Maximum of Facilities in a Tract:  <strong>{{data[chartId].max}}</strong></p>
+        {{else}}
+        <p>Percentage:  <strong>{{data[chartId].pct}}</strong></p>
+        <p>Total Births:  <strong>{{data.total_birth_pop}}</strong></p>
+        {{/if}}
+    </div>
+</div>

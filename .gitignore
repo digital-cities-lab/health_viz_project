@@ -50,3 +50,4 @@ $RECYCLE.BIN/
 backup/*
 bower_components
 node_modules
+tpl/build/.cache
