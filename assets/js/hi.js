@@ -16,7 +16,10 @@ var hi = {
     indicatorIds: ['income', 'weight', 'teen', 'premature', 'insurance', 'hospital', 'emergency'],
     indicatorCodes: ['Median_household_income', 'LowBirthw_2500_grams_2008_2012', 'BirthsTeens_15_19_2008_2012', 'PreBirths_37wks_Gest_2008_2012', 'Pop_wNo_Health_Ins', 'Hospital_Amount', 'Emergency_Amount'],
     indicatorNames: ['Median Household Income', 'Low Birthweight Births', 'Teen Pregnancy', 'Premature Births', 'Population without Health Insurance', 'Hospital Community Facilities', 'Emergency Medical Service Community Facilities'],
-    chartData: {},
+    chartData: {
+        data: [],
+        matrixObject: []
+    },
     currentIndicatorId: 'income',
     currentIndicatorCode: 'Median_household_income',
     currentIndicatorName: 'Median Household Income',
@@ -169,16 +172,22 @@ var hi = {
 
                 //calculate percentage
                 if(totalBirth === 0){
-                    totalBirth = item['Total_Births__2008_2012'];
+                    totalBirth = item['Total_Births__2008_2012'] - 0;
                 }
 
                 if(tmpId === 'weight' || tmpId === 'teen' || tmpId === 'premature'){
-                    pct = value * 100 / (totalBirth - 0);
+                    if(totalBirth === 0){
+                        pct = 0;
+                    }else{
+                        pct = numeral(value / totalBirth).format('0.000');
+                    }
                 }else if(tmpId === 'insurance'){
-                    pct = item['Pct_Pop_wNo_Health_Ins'] - 0;
+                    pct = (item['Pct_Pop_wNo_Health_Ins'] - 0) / 100;
                 }else{
-                    pct = '';
+                    pct = 0;
                 }
+
+                pct = numeral(pct).value();
 
                 //don't save data from undefined tracts
                 if(tmp !== ''){
@@ -216,6 +225,8 @@ var hi = {
             });
         });
 
+        //bind events
+        _this.charts.addEventListener();
     },
     updateLegend: function(){
         var _this = hi;

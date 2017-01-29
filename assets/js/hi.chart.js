@@ -22,7 +22,7 @@ hi.charts = {
             type: 'num',
             width: 480,
             height: 240,
-            margin: {top: 20, right: 5, bottom: 20, left: 5},
+            margin: {top: 20, right: 8, bottom: 20, left: 9},
             colors: _this.groupColors,
             data: [],
             matrixObject: []
@@ -44,6 +44,9 @@ hi.charts = {
                 boxMarginBottom = boxHeight,
                 midline = boxHeight/ 2;
 
+            //empty container
+            $(settings.selector).html('');
+
             var svg = d3.select(settings.selector)
                 .append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -52,13 +55,18 @@ hi.charts = {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             //caculate the maximum of all data
-            if(settings.type === 'num'){
-                var data = data.sort(d3.ascending);
-                maxValue = d3.max(data);
-            }else{
-                maxValue = 100;
-            }
-
+            var dataArray = [];
+            $.each(matrixObject, function(i, groupObjects){
+                $.each(groupObjects, function(j, object){
+                    if(settings.type === 'pct') {
+                        dataArray.push(object.pct);
+                    }else{
+                        dataArray.push(object.value);
+                    }
+                });
+            });
+            dataArray = dataArray.sort(d3.ascending);
+            maxValue = d3.max(dataArray);
 
             //initialize the x scale
             var xScale = d3.scale.linear()
@@ -71,6 +79,10 @@ hi.charts = {
             var xAxis = d3.svg.axis()
                 .scale(xScale)
                 .orient("bottom");
+
+            if(settings.type === 'pct'){
+                xAxis.tickFormat(d3.format("%"))
+            }
 
             //append the axis
             svg.append("g")
@@ -162,10 +174,12 @@ hi.charts = {
                         return random_jitter();
                     })
                     .attr("cx", function(d) {
-                        return xScale(d.value);
+                        var value = settings.type === 'num'? d.value : d.pct;
+                        return xScale(value);
                     })
                     .attr("fill", function(d){
-                        if (d.value < lowerWhisker || d.value > upperWhisker){
+                        var value = settings.type === 'num'? d.value : d.pct;
+                        if (value < lowerWhisker || value > upperWhisker){
                             d.color = '#F7BB4D';
                         }else{
                             d.color = colors[groupIndex];
@@ -372,7 +386,7 @@ hi.charts = {
     addEventListener: function(){
         var _this = hi;
 
-        $('.button-group').on('click', '.button', function(){
+        $('.button-group').on('click', '.button:not(.active)', function(){
             var $this = $(this);
             var $parent = $this.closest('.chart-component');
             var type = $this.data('type');
@@ -381,11 +395,8 @@ hi.charts = {
             _this.charts.createBoxplot({
                 selector: '#chart-' + chartId,
                 type: type,
-                data: data[chartId],
-                matrixData: matrixData[chartId],
-                matrixObject: matrixObject[chartId],
-                groups: _this.groups,
-                colors: _this.groupColors
+                data: _this.chartData.data[chartId],
+                matrixObject: _this.chartData.matrixObject[chartId]
             });
 
             $parent.find('.button').removeClass('active');
