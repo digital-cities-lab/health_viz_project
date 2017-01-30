@@ -190,13 +190,16 @@ h3{
 /*=================Legend================*/
 .map-legend{
     position: fixed;
-    left: 10px;
-    top: 56px;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(10,20,30,0.3);
-    padding: 10px 20px 10px 10px;
+    left: 0px;
+    top: 47px;
+    background: rgba(255,255,255,0.95);
+    /* box-shadow: 0 1px 4px rgba(10,20,30,0.3); */
+    padding: 10px;
     z-index: 1;
-    /*display: none;*/
+    border-right: 1px solid #E1E4E7;
+    border-bottom: 1px solid #E1E4E7;
+    width: 320px;
+    display: none;
 }
 .legend .legend-title{
     font-weight: bold;
@@ -418,7 +421,6 @@ circle:hover {
 .custom-popup .leaflet-popup-content-wrapper {
     background: rgba(255,255,255,0.95);
     font-size: 12px;
-    line-height:18px;
     font-family: 'Roboto', sans-serif;
     border-radius: 0;
 }
@@ -427,12 +429,6 @@ circle:hover {
 }
 .custom-popup .leaflet-popup-content{
     padding: 10px 10px 10px 10px;
-}
-.custom-popup .leaflet-popup-content .tract-name{
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 4px;
-    color: #152740;
 }
 .custom-popup .leaflet-popup-content .label{
     opacity: 0.5;
@@ -449,8 +445,31 @@ circle:hover {
     border: none;
 }
 
+.map-popup-container{
+    position: fixed;
+    left: 0px;
+    top: 47px;
+    background: rgba(255,255,255,0.95);
+    /* box-shadow: 0 1px 4px rgba(10,20,30,0.3); */
+    padding: 10px;
+    z-index: 1;
+    border-right: 1px solid #E1E4E7;
+    border-bottom: 1px solid #E1E4E7;
+    width: 320px;
+    display: none;
+}
+.map-popup-container .icon-cancel{
+    position: absolute;
+    right: 10px;
+    font-size: 14px;
+    top: 12px;
+}
+.map-popup-container .icon-cancel:hover{
+    color: #EE3345;
+}
 .map-popup{
     font-size: 11px;
+    line-height:18px;
 }
 .map-popup .title .class{
     float: right;
@@ -464,6 +483,7 @@ circle:hover {
 }
 .map-popup table{
     width: 100%;
+    table-layout: fixed;
 }
 .map-popup th,
 .map-popup td{
@@ -481,8 +501,20 @@ circle:hover {
     padding-top: 2px;
     vertical-align: middle;
 }
+.map-popup .num{
+    width: 40px;
+}
+.map-popup .pct{
+    width: 50px;
+}
 .map-popup .indicator{
     text-align: left;
+}
+.map-popup .tract-name{
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #152740;
 }
 
 /*=================Tooltip====================*/

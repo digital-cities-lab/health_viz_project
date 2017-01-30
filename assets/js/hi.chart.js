@@ -295,7 +295,8 @@ hi.charts = {
         showBoxPlot(settings.matrixObject, settings.data);
     },
     initTooltip: function(){
-        if($('#panel .tooltip').length === 0){
+        var _this = hi;
+        if(_this.isInitialized === false){
             d3.select('#panel').append("div")
                 .attr("class", "tooltip")
                 .style("display", 'none');
@@ -325,54 +326,68 @@ hi.charts = {
             .moveToFront();
 
 
-        if($(selector).length === 1){
-            //hover on dot to show tooltip
-            var $tooltip = $('.tooltip').eq(0);
-            var left = d3.event.pageX - panelLeft - $tooltip.width()/2 - 5;
-            var top = d3.event.pageY + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
+        if(!_this.isLocked){
+            if(typeof(selector) === 'string'){
+                //hover on map to show tooltips
+                $.each($(selector), function(index, item){
+                    var $tooltip = $('.tooltip').eq(index);
+                    var chartId = d3.select(item).data()[0].chartId;
+                    var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
+                    var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
 
-            $tooltip.show();
+                    $tooltip.show();
 
-            $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: data.chartId}))
-                .css("left", (left < 0 ? 0 : left) + "px")
-                .css("top", top + "px");
-        }else{
-            //hover on map to show tooltips
-            $.each($(selector), function(index, item){
-                var $tooltip = $('.tooltip').eq(index);
-                var chartId = d3.select(item).data()[0].chartId;
-                var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
-                var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
+                    $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
+                        .css("left", (left < 0 ? 0 : left) + "px")
+                        .css("top", top + "px");
+
+                    //add class to prevent from closing
+                    //$(item).addClass('is-locked');
+                });
+            }else{
+                //hover on dot to show tooltip
+                var $tooltip = $('.tooltip').eq(0);
+                var left = d3.event.pageX - panelLeft - $tooltip.width()/2 - 5;
+                var top = d3.event.pageY + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
 
                 $tooltip.show();
 
-                $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
+                $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: data.chartId}))
                     .css("left", (left < 0 ? 0 : left) + "px")
                     .css("top", top + "px");
-            })
+            }
         }
+
     },
     resetHighlight: function(selector){
         var _this = hi;
-        if(!_this.isLocked){
-            var elements = null;
 
-            if(typeof(selector) === 'string'){
-                elements = d3.selectAll(selector);
-            }else{
-                elements = d3.select(selector)
-            }
-
-            elements
-                .attr('r', 2.5)
-                .style({
-                    'stroke-opacity': 0
-                })
-                .moveToBack();
-
+        //if the dot has class "is-locked", prevent from removing highlighting style
+        if(_this.isLocked){
+            d3.selectAll(selector).classed('is-locked', true);
+        }else{
+            d3.selectAll(selector).classed('is-locked', false);
             //close tooltip
             $('.tooltip').hide();
         }
+
+        var elements = null;
+
+        if(typeof(selector) === 'string'){
+            elements = d3.selectAll(selector + ':not(.is-locked)');
+        }else{
+            elements = d3.select(selector);
+            if(elements.classed('is-locked')){
+                return false;
+            }
+        }
+
+        elements
+            .attr('r', 2.5)
+            .style({
+                'stroke-opacity': 0
+            })
+            .moveToBack();
     },
     updateChartLegend: function(){
         //show boxplot legend

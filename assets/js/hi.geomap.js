@@ -86,36 +86,7 @@ hi.geomap = {
         function lockFeature(e){
             var currentLayer = e.target;
 
-            //remove old lock layer
-            if(_this.lockedLayer !== null){
-                //reset previous layer
-                _this.lockedLayer.setStyle({
-                    fillOpacity: 1
-                });
-                _this.geomap.closePopup();
-
-                //if current layer is the locked layer, remove locker
-                if(_this.lockedLayer.feature.properties['GEOID10'] === currentLayer.feature.properties['GEOID10']){
-                    _this.isLocked = false;
-                    _this.lockedLayer = null;
-                }else{
-                    //set current layer
-                    _this.lockedLayer = currentLayer;
-                    _this.lockedLayer.setStyle({
-                        fillOpacity: 0.5
-                    });
-
-                    _this.geomap.openPopup(currentLayer);
-                }
-            }else{
-                _this.lockedLayer = currentLayer;
-                _this.lockedLayer.setStyle({
-                    fillOpacity: 0.5
-                });
-
-                _this.isLocked = true;
-            }
-
+            _this.geomap.addLocked(currentLayer);
         }
 
         //reset highlight
@@ -130,13 +101,92 @@ hi.geomap = {
         function onEachFeature(feature, layer) {
             layer.on({
                 mouseover: highlightFeature,
-                mouseout: resetHighlight/*,
-                click: lockFeature*/
+                mouseout: resetHighlight,
+                click: lockFeature
             });
         }
 
         //L.mapbox.featureLayer().setGeoJSON(gridjson).addTo(map);
 
+    },
+    openFixedPopup: function(layer){
+        var _this = hi;
+        var properties = layer.feature.properties;
+        var $popup = $('#map-popup');
+
+        _this.currentTractId = properties.OBJECTID;
+
+        var data = {
+            tract_name: 'TRACT ' + properties.NAME10,
+            total_pop: properties.Total_Population,
+            total_birth_pop: properties.Total_Births__2008_2012,
+            income: {
+                name: _this.indicatorNames[0],
+                num: properties.Median_household_income
+            },
+            weight: {
+                name: _this.indicatorNames[1],
+                num: properties.LowBirthw_2500_grams_2008_2012,
+                pct: format(properties.LowBirthw_2500_grams_2008_2012/properties.Total_Births__2008_2012)
+            },
+            teen: {
+                name: _this.indicatorNames[2],
+                num: properties.BirthsTeens_15_19_2008_2012,
+                pct: format(properties.BirthsTeens_15_19_2008_2012/properties.Total_Births__2008_2012)
+
+            },
+            premature: {
+                name: _this.indicatorNames[3],
+                num: properties.PreBirths_37wks_Gest_2008_2012,
+                pct: format(properties.PreBirths_37wks_Gest_2008_2012/properties.Total_Births__2008_2012)
+
+            },
+            insurance: {
+                name: _this.indicatorNames[4],
+                num: properties.Pop_wNo_Health_Ins,
+                pct: format(properties.Pop_wNo_Health_Ins/properties.Total_Population)
+
+            },
+            hospital: {
+                name: _this.indicatorNames[5],
+                num: properties.Hospital_Amount,
+                max: 3
+
+            },
+            emergency: {
+                name: _this.indicatorNames[6],
+                num: properties.Emergency_Amount,
+                max: 5
+            }
+        };
+
+        var content = template('map-popup', data);
+
+        $popup.find('.content').html(content).end().show();
+
+        function format(num){
+            return numeral(num).format('0.00%');
+        }
+
+        //addEvent
+        $popup.off();
+        $popup.on('click', '.close', function(e){
+            e.preventDefault();
+
+            _this.geomap.removeLocked();
+        });
+
+        _this.currentTract = data;
+    },
+    closeFixedPopup: function(){
+        var _this = hi;
+
+        if(!_this.popupLayer){
+            var $popup = $('#map-popup');
+            $popup.hide();
+
+            _this.popupLayer = null;
+        }
     },
     openPopup: function(layer){
         var _this = hi;
@@ -254,7 +304,8 @@ hi.geomap = {
 
         if(!_this.isLocked){
             //show popup
-            _this.geomap.openPopup(layer);
+            //_this.geomap.openPopup(layer);
+            _this.geomap.openFixedPopup(layer);
         }
 
     },
@@ -267,8 +318,54 @@ hi.geomap = {
 
         if(!_this.isLocked){
             //close popup
-            _this.geomap.closePopup();
+            //_this.geomap.closePopup();
+            _this.geomap.closeFixedPopup();
         }
+    },
+    addLocked: function(currentLayer){
+        var _this = hi;
+
+        //remove old lock layer
+        if(_this.lockedLayer !== null){
+            //reset previous layer
+            _this.lockedLayer.setStyle({
+                fillOpacity: 1
+            });
+            _this.geomap.closeFixedPopup();
+
+            //if current layer is the locked layer, remove locker
+            if(_this.lockedLayer.feature.properties['OBJECTID'] === currentLayer.feature.properties['OBJECTID']){
+                _this.charts.resetHighlight('.tract_' + _this.lockedLayer.feature.properties['OBJECTID']);
+                _this.isLocked = false;
+                _this.lockedLayer = null;
+            }else{
+                //set current layer
+                _this.lockedLayer = currentLayer;
+                _this.lockedLayer.setStyle({
+                    fillOpacity: 0.5
+                });
+
+                _this.geomap.openFixedPopup(currentLayer);
+            }
+        }else{
+            _this.lockedLayer = currentLayer;
+            _this.lockedLayer.setStyle({
+                fillOpacity: 0.5
+            });
+
+            _this.isLocked = true;
+        }
+    },
+    removeLocked: function(){
+        var _this = hi;
+        //reset previous layer
+        _this.lockedLayer.setStyle({
+            fillOpacity: 1
+        });
+        _this.geomap.closeFixedPopup();
+        _this.isLocked = false;
+        _this.lockedLayer = null;
+        _this.charts.resetHighlight('.tract_' + _this.currentTractId);
     }
 
 };

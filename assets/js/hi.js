@@ -32,6 +32,7 @@ var hi = {
     isLocked: false,
     lockedLayer: null,
     slider: null,
+    isInitialized: false,
 
     init: function(){
         var _this = this;
@@ -75,6 +76,8 @@ var hi = {
 
             _this.updateLegend();
             _this.updateRangeSlider();
+
+            _this.isInitialized = true;
         });
 
         //add events
@@ -115,6 +118,8 @@ var hi = {
 
             //change the order of relevant chart
             $("#chart-component-" + _this.currentIndicatorId).prependTo($('#panel .panel-content'));
+
+            $('#panel').animate({ scrollTop: 0 }, 'fast');
         });
 
         $('#map-type-select').on('change', function(e){
