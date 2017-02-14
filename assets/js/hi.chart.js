@@ -434,10 +434,11 @@ hi.chart = {
             data.push(item.length);
         });
 
-        $('#chart-legend').html(template('chart-legend', {data: data, colors: _this.currentColors}));
-    },
-    updateToolip: function(selector, data){
-
+        $('#chart-legend-container').html(template('chart-legend', {data: data, colors: _this.currentColors}));
+        $("#chart-legend").makeFixed({
+            container: '#panel',
+            defTopPos: 47
+        });
     },
     setHighlight: function(selector, data){
         var _this = hi;

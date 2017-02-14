@@ -238,13 +238,16 @@ h3{
     color: #a6adb5;
     font-size: 10px;
 }
-
+.chart-legend-container{
+    height: 65px;
+}
 .chart-legend{
-    padding: 25px 12px 15px;
+    padding: 10px 12px 10px;
+    background-color: rgba(255,255,255,0.95);
 }
 .chart-legend li{
     display: inline-block;
-    padding: 8px;
+    padding: 0 8px;
 }
 .chart-legend .desp{
     float: none;
@@ -275,6 +278,7 @@ h3{
     padding: 20px 20px 15px 20px;
     background-color: #F0F2F4;
     max-height: 140px;
+    margin-bottom: 20px;
 }
 .panel .range-slider h3{
     margin-bottom: 15px;

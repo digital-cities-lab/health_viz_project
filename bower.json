@@ -15,20 +15,20 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
+    "ion.rangeSlider": "^2.1.6",
+    "numeral": "numeraljs#^2.0.4",
     "d3": "^4.3.0",
     "topojson": "^2.1.0",
     "d3kit": "^3.1.1",
-    "d3kit-gridmap": "^1.1.0",
     "selectize": "^0.12.4",
     "turfjs": "*",
-    "highcharts": "^5.0.2",
     "munkres-js": "^1.2.1",
-    "colorbrewer": "^1.0.0",
-    "jquery-scrollto": "^1.4.6"
-  },
-  "dependencies": {
-    "ion.rangeSlider": "^2.1.6",
-    "numeral": "numeraljs#^2.0.4"
+    "jquery-scrollto": "^1.4.6",
+    "imagesloaded": "^4.1.1",
+    "nprogress": "^0.2.0",
+    "reset-css": "^2.2.0",
+    "artTemplate": "^3.0.1"
   }
 }
