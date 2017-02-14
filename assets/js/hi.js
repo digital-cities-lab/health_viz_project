@@ -2,7 +2,7 @@ var hi = {
     healthData: {},
     facilityProjection: {},
     gridMapData: {},
-    boundaryData: {},
+    cartoMapData: {},
     map: null,
     geoLayer: null,
     popupLayer : null,
@@ -29,10 +29,11 @@ var hi = {
     currentGroupNames: [],
     currentTract: {},
     currentColors: [],
+    currentColor: '',
+    currentRange: null,
     isLocked: false,
     lockedLayer: null,
     slider: null,
-    isInitialized: false,
 
     init: function(){
         var _this = this;
@@ -70,14 +71,10 @@ var hi = {
             _this.currentGroupNames = _this.process.getGroupNames(_this.currentGroupThreshold);
 
             //show map and charts
-            _this.showBoxplot();
-            _this.showGridMap();
-            //_this.showBoundaryMap();
+            _this.chart.createAllBoxplots();
+            _this.geomap.createGridMap();
 
-            _this.updateLegend();
-            _this.updateRangeSlider();
-
-            _this.isInitialized = true;
+            _this.createRangeSlider();
         });
 
         //add events
@@ -109,11 +106,10 @@ var hi = {
                 _this.currentColors = _this.reversedGroupColors;
             }
             //show map and charts
-            _this.updateBoxPlot();
-            _this.updateMap();
+            _this.chart.updateAllBoxplots();
+            _this.geomap.updateMap();
 
             //change legend title
-            _this.updateLegend();
             _this.updateRangeSlider();
 
             //change the order of relevant chart
@@ -134,176 +130,48 @@ var hi = {
             }
 
             if(type === 'grid'){
-                _this.showGridMap();
+                _this.geomap.createGridMap();
             }else{
-                _this.showBoundaryMap();
+                _this.geomap.createCartoMap();
             }
         });
     },
-    //show default overview charts on the right panel
-    showBoxplot: function(){
-        var _this = this;
-        var matrixObject = {};          //cache tract id
-        var groupCount = _this.groups.length;
-
-        //initialize matrix
-        $.each(_this.indicatorIds, function(chartIndex, chartId){
-            matrixObject[chartId] = [];
-            for(var i = 0; i < groupCount; i++){
-                matrixObject[chartId][i] = [];
-            }
-        });
-
-        $.each(_this.healthData, function(index, item){
-            var itemVal = item[_this.currentIndicatorCode];
-            var groupIndex = _this.process.getGroupIndex(itemVal);
-            var objectId = item.OBJECTID;
-
-            $.each(_this.indicatorCodes, function(chartIndex, chartCode){
-                var tmpId = _this.indicatorIds[chartIndex]; //chart id
-                var tmp = 0;
-                var value = 0;
-                var totalBirth = 0;
-                var totalPop = 0;
-                var pct = 0;
-
-                //calculate facilities count
-                if(tmpId === 'emergency' || tmpId === 'hospital'){
-                    var facilityArray = _this.facilityProjection[tmpId];
-                    var facilityCount = facilityArray[objectId] && facilityArray[objectId].length ? facilityArray[objectId].length : 0;
-                    tmp = facilityCount;
-                }else{
-                    tmp = item[chartCode];
-                }
-
-                //transform to numeric type
-                value = tmp - 0;
-
-                //calculate percentage
-                if(totalBirth === 0){
-                    totalBirth = item['Total_Births__2008_2012'] - 0;
-                }
-
-                if(tmpId === 'weight' || tmpId === 'teen' || tmpId === 'premature'){
-                    if(totalBirth === 0){
-                        pct = 0;
-                    }else{
-                        pct = numeral(value / totalBirth).format('0.000');
-                    }
-                }else if(tmpId === 'insurance'){
-                    pct = (item['Pct_Pop_wNo_Health_Ins'] - 0) / 100;
-                }else{
-                    pct = 0;
-                }
-
-                pct = numeral(pct).value();
-
-                //don't save data from undefined tracts
-                for(var i = 0; i < groupCount; i++){
-                    if(groupIndex === i){
-                        if(tmp !== ''){
-                            matrixObject[tmpId][i].push({
-                                value: value,
-                                tractId: objectId,
-                                chartId: tmpId,
-                                pct: pct
-                            });
-                        }
-                    }
-                }
-            });
-        });
-
-        //cache matrix object data
-        _this.chartData.matrixObject = matrixObject;
-
-        //show boxplot legend
-        _this.charts.updateChartLegend();
-
-        //show boxplot
-        $.each(_this.indicatorIds, function(chartIndex, chartId){
-            _this.charts.createBoxplot({
-                selector: '#chart-' + chartId,
-                matrixObject: matrixObject[chartId]
-            });
-        });
-
-        //bind events
-        _this.charts.addEventListener();
-    },
-    updateLegend: function(){
+    createRangeSlider: function(){
         var _this = hi;
         var threshold = _this.currentGroupThreshold;
         var unit = _this.process.getUnit();
-        var ranges = [
-            format(threshold.p80) + ' - ' + format(threshold.maxVal),
-            format(threshold.p60) + ' - ' + format(threshold.p80),
-            format(threshold.p40) + ' - ' + format(threshold.p60),
-            format(threshold.p20) + ' - ' + format(threshold.p40),
-            format(threshold.minVal) + ' - ' + format(threshold.p20)
-        ];
 
-        var data = {
-            currentIndicatorName: _this.currentIndicatorName,
-            colors: _this.currentColors,
-            unit: unit,
-            ranges: ranges
-        };
+        //update title
+        $('.range-slider h3').html(_this.currentIndicatorName + ' (' + unit + ')');
 
-        var html = template('legend', data);
-        $('#legend').html(html);
+        $("#range-slider").ionRangeSlider({
+            type: "double",
+            min: threshold.minVal,
+            max: threshold.maxVal,
+            from: threshold.minVal,
+            to: threshold.maxVal,
+            hide_min_max: true,
+            hide_from_to: false,
+            grid: true,
+            grid_num: 5,
+            onStart: function () {
+                _this.currentRange = {
+                    min: threshold.minVal,
+                    max: threshold.maxVal
+                };
+            },
+            onFinish: function(data){
+                _this.currentRange = {
+                    min: data.from,
+                    max: data.to
+                };
 
-        function format(num){
-            return numeral(num).format('0a');
-        }
-    },
-    updateBoxPlot: function(){
-        var _this = hi;
-
-        //clear right panel
-        $.each(_this.indicatorIds, function(chartIndex, chartId){
-            $('#chart-' + chartId).html('');
+                //_this.chart.updateAllBoxplots();
+                console.log(_this.currentRange);
+            }
         });
 
-        _this.showBoxplot();
-    },
-    showGridMap: function(){
-        var _this = hi;
-
-        if(_this.map === null){
-            _this.geomap.createMap();
-        }
-        //create grid layer after map initialized
-        _this.geomap.createGeoLayer();
-    },
-    updateMap: function(){
-        var _this = hi;
-
-        if(_this.geoLayer !== null){
-            _this.geoLayer.clearLayers();
-        }
-        _this.geomap.createGeoLayer();
-    },
-    showBoundaryMap: function(){
-        var _this = hi;
-
-        if(_this.map === null){
-            _this.geomap.createMap();
-        }
-
-        if($.isEmptyObject(_this.boundaryData)){
-
-            $.when($.getJSON('data/boundaries.geojson')).done(function(a1){
-                //cache data to show and update charts
-                _this.boundaryData = a1;
-
-                //show map and charts
-                _this.geomap.createGeoLayer();
-            });
-
-        }else{
-            _this.geomap.createGeoLayer();
-        }
+        _this.slider = $("#range-slider").data("ionRangeSlider");
     },
     updateRangeSlider: function(){
         var _this = hi;
@@ -313,33 +181,17 @@ var hi = {
         //update title
         $('.range-slider h3').html(_this.currentIndicatorName + ' (' + unit + ')');
 
-        if(_this.slider === null){
-            $("#range-slider").ionRangeSlider({
-                type: "double",
-                min: threshold.minVal,
-                max: threshold.maxVal,
-                from: threshold.minVal,
-                to: threshold.maxVal,
-                hide_min_max: true,
-                hide_from_to: false,
-                grid: true,
-                grid_num: 5
-            });
+        _this.slider.update({
+            min: threshold.minVal,
+            max: threshold.maxVal,
+            from: threshold.minVal,
+            to: threshold.maxVal
+        });
 
-            _this.slider = $("#range-slider").data("ionRangeSlider");
+        if(_this.currentIndicatorId === 'income'){
+            $('.irs-line').css('background-image', 'url(./assets/img/slider_bg.png)');
         }else{
-            _this.slider.update({
-                min: threshold.minVal,
-                max: threshold.maxVal,
-                from: threshold.minVal,
-                to: threshold.maxVal
-            });
-
-            if(_this.currentIndicatorId === 'income'){
-                $('.irs-line').css('background-image', 'url(./assets/img/slider_bg.png)');
-            }else{
-                $('.irs-line').css('background-image', 'url(./assets/img/slider_reversed_bg.png)');
-            }
+            $('.irs-line').css('background-image', 'url(./assets/img/slider_reversed_bg.png)');
         }
     }
 };

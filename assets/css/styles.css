@@ -364,9 +364,10 @@ circle {
 }
 
 circle:hover {
-    fill: orange;
-    stroke: orange;
-    opacity: 1;
+    /*fill: orange;*/
+    /*stroke: orange;*/
+    /*opacity: 1;*/
+    cursor: pointer;
 }
 
 .outlier {
