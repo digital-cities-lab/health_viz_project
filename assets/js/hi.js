@@ -23,7 +23,6 @@ var hi = {
     currentIndicatorId: 'income',
     currentIndicatorCode: 'Median_household_income',
     currentIndicatorName: 'Median Household Income',
-    currentTractId: null,
     currentMapType: 'grid',
     currentGroupThreshold: {},
     currentGroupNames: [],
@@ -32,6 +31,7 @@ var hi = {
     currentColor: '',
     currentRange: null,
     isLocked: false,
+    lockedTractId: null,
     lockedLayer: null,
     slider: null,
 

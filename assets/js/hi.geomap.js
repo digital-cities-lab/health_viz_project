@@ -113,7 +113,7 @@ hi.geomap = {
         //highlight feature when hovering
         function handleMouseOver(e) {
             var layer = e.target;
-            //_this.currentTractId = layer.feature.properties.OBJECTID;
+            //_this.lockedTractId = layer.feature.properties.OBJECTID;
 
             _this.geomap.setHighlight(layer);
             _this.chart.setHighlight('.tract_' + layer.feature.properties.OBJECTID);
@@ -122,7 +122,7 @@ hi.geomap = {
         //reset highlight
         function handleMouseOut(e) {
             var layer = e.target;
-            //_this.currentTractId = layer.feature.properties.OBJECTID;
+            //_this.lockedTractId = layer.feature.properties.OBJECTID;
 
             _this.geomap.resetHighlight(layer);
             _this.chart.resetHighlight('.tract_' + layer.feature.properties.OBJECTID);
@@ -135,19 +135,25 @@ hi.geomap = {
             //remove old lock layer
             if(_this.isLocked) {
                 //if current layer is the locked layer, return
-                if(_this.lockedLayer.feature.properties['OBJECTID'] === layer.feature.properties['OBJECTID']){
+                if(_this.lockedTractId === layer.feature.properties['OBJECTID']){
+                    _this.lockedTractId = null;
                     _this.geomap.resetLocker();
                     _this.chart.resetLocker();
                 }else{
                     _this.geomap.resetLocker();
                     _this.chart.resetLocker();
 
-                    _this.geomap.setLocker(layer);
-                    _this.chart.setLocker('.tract_' + layer.feature.properties['OBJECTID']);
+                    setNewLocker();
                 }
             }else{
+                setNewLocker();
+            }
+
+            function setNewLocker(){
+                _this.lockedTractId = layer.feature.properties['OBJECTID'];
+
                 _this.geomap.setLocker(layer);
-                _this.chart.setLocker('.tract_' + layer.feature.properties['OBJECTID']);
+                _this.chart.setLocker('.tract_' + _this.lockedTractId);
             }
         }
 
@@ -184,10 +190,11 @@ hi.geomap = {
         var $popup = $('#map-popup');
 
         var data = {
+            tract_id: properties.OBJECTID,
             tract_name: 'TRACT ' + properties.NAME10,
             total_pop: properties.Total_Population,
             total_birth_pop: properties.Total_Births__2008_2012,
-            color: _this.lockedLayer !== null ? _this.currentColor : layer.options.fillColor,
+            color: _this.isLocked ? _this.currentColor : layer.options.fillColor,
             income: {
                 name: _this.indicatorNames[0],
                 num: properties.Median_household_income

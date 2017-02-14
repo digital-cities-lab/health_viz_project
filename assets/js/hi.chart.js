@@ -90,7 +90,7 @@ hi.chart = {
             .call(xAxis);
 
         //append the div for the tooltip
-        d3.select('#panel').append("div")
+        d3.select(settings.selector).append("div")
             .attr("class", "tooltip")
             .style("display", 'none');
 
@@ -247,7 +247,7 @@ hi.chart = {
 
         //event
         function handleMouseOver(d) {
-            //_this.currentTractId = d.tractId;
+            //_this.lockedTractId = d.tractId;
 
             //change layer color on map to point out location of the tracts
             _this.geoLayer.eachLayer(function(layer) {
@@ -282,7 +282,8 @@ hi.chart = {
             //remove old lock layer
             if(_this.isLocked) {
                 //if current circle is the locked circle, return
-                if(_this.currentTractId === d.tractId){
+                if(_this.lockedTractId === d.tractId){
+                    _this.lockedTractId = null;
                     _this.geomap.resetLocker();
                     _this.chart.resetLocker();
                 }else{
@@ -296,11 +297,11 @@ hi.chart = {
             }
 
             function setNewLocker(){
-                _this.currentTractId = d.tractId;
+                _this.lockedTractId = d.tractId;
 
                 //change layer color on map to point out location of the tracts
                 _this.geoLayer.eachLayer(function(layer) {
-                    if (layer.feature.properties.OBJECTID == _this.currentTractId) {
+                    if (layer.feature.properties.OBJECTID == _this.lockedTractId) {
 
                         _this.geomap.setLocker(layer);
 
@@ -443,11 +444,8 @@ hi.chart = {
     setHighlight: function(selector, data){
         var _this = hi;
         var data = data || {};
-        var $panel = $('#panel');
-        var panelLeft = parseInt($panel.css('left'));
-
         var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
-        var elements = d3.selectAll(selector);
+        var elements = d3.selectAll(selector + ':not(.is-locked)');
 
         //update circles
         elements
@@ -463,36 +461,25 @@ hi.chart = {
 
         if(!_this.isLocked){
             //update tooltip
-                $('.tooltip').hide();
+            _this.chart.closeTooltip();
 
-                $.each($(selector), function(index, item){
-                    var $tooltip = $('.tooltip').eq(index);
-                    var chartId = d3.select(item).data()[0].chartId;
-                    var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
-                    var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
-
-                    $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
-                        .css("left", (left < 0 ? 0 : left) + "px")
-                        .css("top", top + "px");
-
-                    $tooltip.show();
-
-                    //add class to prevent from closing
-                    //$(item).addClass('is-locked');
-                });
+            $.each($(selector), function(index, item){
+                var $parent = $(item).closest('.chart-component');
+                _this.chart.updateTooltip($parent, '.' + $(item).attr('class'));
+            });
         }
 
     },
     resetHighlight: function(selector){
         var _this = hi;
 
-        //if the dot has class "is-locked", prevent from removing highlighting style
         if(!_this.isLocked){
-            $('.tooltip').hide();
+            _this.chart.closeTooltip();
         }
 
         var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
-        var elements = d3.selectAll(selector + ':not(.is-locked)');;
+        //if the dot has class "is-locked", prevent from removing highlighting style
+        var elements = d3.selectAll(selector + ':not(.is-locked)');
 
         elements
             .attr('r', 2.5)
@@ -505,9 +492,81 @@ hi.chart = {
     setLocker: function(selector){
         var _this = hi;
         var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+
+        //lock dots
+        _this.chart.setLockedCircle(selector);
+
+        //update tooltips
+        $.each($(selector), function(index){
+            var $parent = $('.chart-component').eq(index);
+            _this.chart.updateTooltip($parent, '.tract_' + _this.lockedTractId);
+        });
+    },
+    resetLocker: function(){
+        var _this = hi;
+
+        //reset locked dots
+        _this.chart.resetLockedCircle('.is-locked');
+
+        //hide tooltips
+        _this.chart.closeTooltip();
+    },
+    addEventListener: function(){
+        var _this = hi;
+
+        //switch between "persons" and "percentage"
+        $('.button-group').on('click', '.button:not(.active)', function(){
+            var $this = $(this);
+            var chartId = $this.data('chartId');
+            var type = $this.data('type');
+            var parentSelector = '#chart-component-' + chartId;
+            var $parent = $this.closest(parentSelector);
+
+            _this.chart.createBoxplot({
+                selector: '#chart-' + chartId,
+                type: type,
+                matrixObject: _this.chartData.matrixObject[chartId]
+            });
+
+            $parent.find('.button').removeClass('active');
+            $this.addClass('active');
+
+            if(_this.isLocked){
+                var selector = '.tract_' + _this.lockedTractId;
+
+                _this.chart.setLockedCircle(parentSelector + ' ' + selector);
+                _this.chart.updateTooltip(parentSelector, selector);
+            }
+        });
+    },
+    //container: #chart-component-weight, selector: .tract_343
+    updateTooltip: function(container, selector){
+        var _this = hi;
+        var $panel = $('#panel');
+        var panelLeft = parseInt($panel.css('left'));
+
+        var item = $(container).find(selector)[0];
+        var $tooltip = $(container).find('.tooltip');
+        var chartId = d3.select(item).data()[0].chartId;
+
+        $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
+
+        var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
+        var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
+
+        $tooltip
+            .css("left", (left < 0 ? 0 : left) + "px")
+            .css("top", top + "px")
+            .show();
+
+    },
+    closeTooltip: function(){
+        $('.tooltip').hide();
+    },
+    setLockedCircle: function(selector){
+        var _this = hi;
         var elements = d3.selectAll(selector);
 
-        //highlight dots
         elements
             .attr('r', 5)
             .style({
@@ -518,30 +577,10 @@ hi.chart = {
             })
             .classed('is-locked', true)
             .moveToFront();
-
-        //update tooltips
-        var $panel = $('#panel');
-        var panelLeft = parseInt($panel.css('left'));
-
-        $.each($(selector), function(index, item){
-            var $tooltip = $('.tooltip').eq(index);
-            var chartId = d3.select(item).data()[0].chartId;
-            var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
-            var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
-
-            $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
-                .css("left", (left < 0 ? 0 : left) + "px")
-                .css("top", top + "px");
-
-            $tooltip.show();
-
-            console.log('test');
-
-        });
     },
-    resetLocker: function(){
+    resetLockedCircle: function(selector){
         var _this = hi;
-        var elements = d3.selectAll('.is-locked');
+        var elements = d3.selectAll(selector);
 
         elements
             .attr('r', 2.5)
@@ -551,28 +590,9 @@ hi.chart = {
             })
             .classed('is-locked', false)
             .moveToBack();
-
-        $('.tooltip').hide();
-
-        console.log('test');
     },
-    addEventListener: function(){
-        var _this = hi;
-
-        $('.button-group').on('click', '.button:not(.active)', function(){
-            var $this = $(this);
-            var $parent = $this.closest('.chart-component');
-            var type = $this.data('type');
-            var chartId = $this.data('chartId');
-
-            _this.chart.createBoxplot({
-                selector: '#chart-' + chartId,
-                type: type,
-                matrixObject: _this.chartData.matrixObject[chartId]
-            });
-
-            $parent.find('.button').removeClass('active');
-            $this.addClass('active');
-        })
+    onFinish: function(callback){
+        callback();
     }
+
 };
