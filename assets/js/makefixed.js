@@ -135,7 +135,6 @@ $.fn.makeFixed = function (options)
 			}
 
 			/* Callbacks */
-
 			if (el.attr(attr.cIsFixed) == 1 && options && options.onFixed && typeof options.onFixed == 'function')
 				options.onFixed (elc);	
 

@@ -446,16 +446,8 @@ hi.chart = {
         var $panel = $('#panel');
         var panelLeft = parseInt($panel.css('left'));
 
-        var elements = null;
-
-        if(typeof(selector) === 'string'){
-            elements = d3.selectAll(selector + ':not(.is-locked)');
-        }else{
-            elements = d3.select(selector);
-            if(elements.classed('is-locked')){
-                return false;
-            }
-        }
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var elements = d3.selectAll(selector);
 
         //update circles
         elements
@@ -471,35 +463,23 @@ hi.chart = {
 
         if(!_this.isLocked){
             //update tooltip
-            if(typeof(selector) === 'string'){
-                //hover on map to show tooltips
+                $('.tooltip').hide();
+
                 $.each($(selector), function(index, item){
                     var $tooltip = $('.tooltip').eq(index);
                     var chartId = d3.select(item).data()[0].chartId;
                     var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
                     var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
 
-                    $tooltip.show();
-
                     $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
                         .css("left", (left < 0 ? 0 : left) + "px")
                         .css("top", top + "px");
 
+                    $tooltip.show();
+
                     //add class to prevent from closing
                     //$(item).addClass('is-locked');
                 });
-            }else{
-                //hover on dot to show one tooltip
-                $('.tooltip').hide();
-                var $tooltip = $('.tooltip').eq(0);
-                var left = d3.event.pageX - panelLeft - $tooltip.width()/2 - 5;
-                var top = d3.event.pageY + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
-
-                $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: data.chartId}))
-                    .css("left", (left < 0 ? 0 : left) + "px")
-                    .css("top", top + "px")
-                    .show();
-            }
         }
 
     },
@@ -511,16 +491,8 @@ hi.chart = {
             $('.tooltip').hide();
         }
 
-        var elements = null;
-
-        if(typeof(selector) === 'string'){
-            elements = d3.selectAll(selector + ':not(.is-locked)');
-        }else{
-            elements = d3.select(selector);
-            if(elements.classed('is-locked')){
-                return false;
-            }
-        }
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var elements = d3.selectAll(selector + ':not(.is-locked)');;
 
         elements
             .attr('r', 2.5)
@@ -532,16 +504,10 @@ hi.chart = {
     },
     setLocker: function(selector){
         var _this = hi;
-        var elements = null;
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var elements = d3.selectAll(selector);
 
-        _this.chart.setHighlight(selector);
-
-        if(typeof(selector) === 'string'){
-            elements = d3.selectAll(selector);
-        }else{
-            elements = d3.select(selector)
-        }
-
+        //highlight dots
         elements
             .attr('r', 5)
             .style({
@@ -554,7 +520,6 @@ hi.chart = {
             .moveToFront();
 
         //update tooltips
-        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
         var $panel = $('#panel');
         var panelLeft = parseInt($panel.css('left'));
 
@@ -564,11 +529,13 @@ hi.chart = {
             var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
             var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
 
-            $tooltip.show();
-
             $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
                 .css("left", (left < 0 ? 0 : left) + "px")
                 .css("top", top + "px");
+
+            $tooltip.show();
+
+            console.log('test');
 
         });
     },
