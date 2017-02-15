@@ -91,8 +91,10 @@ hi.chart = {
 
         //append the div for the tooltip
         var $chartComponent = $(settings.selector).closest('.chart-component');
-        $chartComponent
-            .append('<div class="tooltip" style="display: none"></div>');
+        if($chartComponent.find('.tooltip').length === 0){
+            $chartComponent
+                .append('<div class="tooltip" style="display: none"></div>');
+        }
 
         //append boxplot for each group
         $.each(matrixObject, function(index, groupObjects){
@@ -430,6 +432,8 @@ hi.chart = {
         $('.tooltip').remove();
 
         _this.chart.createAllBoxplots();
+
+        _this.chart.stopLoading();
     },
     createChartLegend: function(){
         //show boxplot legend
@@ -551,7 +555,7 @@ hi.chart = {
         var panelLeft = parseInt($panel.css('left'));
 
         var item = $(container).find(selector)[0];
-        var $tooltip = $(container).find('.tooltip');
+        var $tooltip = $(container).closest('.chart-component').find('.tooltip');
         if(!d3.select(item).data()[0]){
             return;
         }
@@ -561,7 +565,6 @@ hi.chart = {
 
         var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
         var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
-        //var top = $(item).position().top;
 
         $tooltip
             .css("left", (left < 0 ? 0 : left) + "px")

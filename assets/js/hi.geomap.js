@@ -24,9 +24,18 @@ hi.geomap = {
         if(_this.map === null){
             _this.geomap.createMap();
         }
+
+        //clear layer first
+        if(_this.geoLayer !== null){
+            _this.geoLayer.clearLayers();
+        }
+
         //create geo layer after map initialized
         _this.geomap.createGeoLayer();
-        _this.geomap.createLegend();
+        //_this.geomap.createLegend();
+
+        //stop loading
+        _this.geomap.stopLoading();
     },
     createCartoMap: function(){
         var _this = hi;
@@ -41,12 +50,27 @@ hi.geomap = {
                 //cache data to show and update charts
                 _this.cartoMapData = a1;
 
+                //clear layer first
+                if(_this.geoLayer !== null){
+                    _this.geoLayer.clearLayers();
+                }
+
                 //show map and charts
                 _this.geomap.createGeoLayer();
+
+                //stop loading
+                _this.geomap.stopLoading();
             });
 
         }else{
+
+            //clear layer first
+            if(_this.geoLayer !== null){
+                _this.geoLayer.clearLayers();
+            }
             _this.geomap.createGeoLayer();
+
+            _this.geomap.stopLoading();
         }
     },
     updateMap: function(){
@@ -57,12 +81,13 @@ hi.geomap = {
         }
         _this.geomap.createGeoLayer();
         //_this.geomap.createLegend();
+
+        _this.geomap.stopLoading();
     },
     createGeoLayer: function(){
         var _this = hi;
         var geoData = _this.currentMapType === 'carto' ? _this.cartoMapData : _this.gridMapData;
-        //var geoData =  _this.cartoMapData;
-        var type = _this.currentMapType;
+        //var type = _this.currentMapType;
         var map = _this.map;
         var chartCode = _this.currentIndicatorCode;
         var relationObj = _this.process.transformToObject();
@@ -77,6 +102,7 @@ hi.geomap = {
             var groupIndex = _this.process.getGroupIndex(cellVal);
             var color = _this.currentColors[groupIndex];
             var isDisabled = false;
+            cell.properties.disabled = 0;
 
             var min = 0;
             var max = 0;
@@ -316,7 +342,6 @@ hi.geomap = {
 
         if(!_this.isLocked){
             //show popup
-            //_this.geomap.openPopup(layer);
             _this.geomap.openFixedPopup(layer);
         }
 

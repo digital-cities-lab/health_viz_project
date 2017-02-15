@@ -38,25 +38,10 @@ var hi = {
     init: function(){
         var _this = this;
 
-        //loading indicator
-        /*NProgress.configure({
-            showSpinner: true
-        });
-        NProgress.configure({
-            //minimum: 0.1
-        });*/
-
-        /*$('body').loading({
-            stoppable: true,
-            zIndex: 1100
-        });*/
-
         $(document)
             .ajaxStart(function() {
-                //NProgress.start();
             })
             .ajaxComplete(function() {
-                //NProgress.done();
                 $("#page-loader").fadeOut();
             });
 
@@ -100,6 +85,9 @@ var hi = {
         $('#indicator-select').on('change', function(e){
             e.preventDefault();
 
+            _this.geomap.startLoading();
+            _this.chart.startLoading();
+
             //change current indicator
             var indicatorId = $(this).val();
             _this.currentIndicatorId = indicatorId;
@@ -116,35 +104,43 @@ var hi = {
             }else{
                 _this.currentColors = _this.reversedGroupColors;
             }
-            //show map and charts
-            _this.chart.updateAllBoxplots();
-            _this.geomap.updateMap();
 
             //change legend title
             _this.updateRangeSlider();
 
-            //change the order of relevant chart
-            $("#chart-component-" + _this.currentIndicatorId).prependTo($('#panel .panel-content'));
 
-            $('#panel').animate({ scrollTop: 0 }, 'fast');
+            //show map and charts
+            window.setTimeout(function(){
+                _this.chart.updateAllBoxplots();
+                _this.geomap.updateMap();
+
+            }, 5);
+
+
+            //change the order of relevant chart
+            //$("#chart-component-" + _this.currentIndicatorId).prependTo($('#panel .panel-content'));
+
+            //$('#panel').animate({ scrollTop: 0 }, 'fast');
         });
 
         $('#map-type-select').on('change', function(e){
             e.preventDefault();
 
+            //start loading
+            _this.geomap.startLoading();
+
+
             var type = $(this).val();
             _this.currentMapType = type;
 
-            //clear layer first
-            if(_this.geoLayer !== null){
-                _this.geoLayer.clearLayers();
-            }
-
-            if(type === 'grid'){
-                _this.geomap.createGridMap();
-            }else{
-                _this.geomap.createCartoMap();
-            }
+            //show map and charts
+            window.setTimeout(function(){
+                if(type === 'grid'){
+                    _this.geomap.createGridMap();
+                }else{
+                    _this.geomap.createCartoMap();
+                }
+            }, 5);
         });
     },
     createRangeSlider: function(){
@@ -185,8 +181,21 @@ var hi = {
                         _this.geomap.startLoading();
                         _this.chart.startLoading();
                     }
-                    console.log('change');
+                    //console.log('change');
                 }
+            },
+            onUpdate: function(data){
+                _this.currentRange = {
+                    min: data.from,
+                    max: data.to
+                };
+
+                //_this.chart.updateAllBoxplots();
+                //_this.geomap.updateMap();
+                //console.log(_this.currentRange);
+
+                //_this.geomap.stopLoading();
+                //_this.chart.stopLoading();
             },
             onFinish: function(data){
                 var isInitialized = _this.slider !== null;
@@ -200,17 +209,17 @@ var hi = {
 
                     _this.chart.updateAllBoxplots();
                     _this.geomap.updateMap();
-                    console.log(_this.currentRange);
+                    //console.log(_this.currentRange);
 
                     _this.geomap.stopLoading();
                     _this.chart.stopLoading();
-                }else{
-                    _this.slider = $("#range-slider").data("ionRangeSlider");
                 }
 
                 isChanging = false;
             }
         });
+
+        _this.slider = $("#range-slider").data("ionRangeSlider");
     },
     updateRangeSlider: function(){
         var _this = hi;
