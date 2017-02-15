@@ -90,9 +90,9 @@ hi.chart = {
             .call(xAxis);
 
         //append the div for the tooltip
-        d3.select(settings.selector).append("div")
-            .attr("class", "tooltip")
-            .style("display", 'none');
+        var $chartComponent = $(settings.selector).closest('.chart-component');
+        $chartComponent
+            .append('<div class="tooltip" style="display: none"></div>');
 
         //append boxplot for each group
         $.each(matrixObject, function(index, groupObjects){
@@ -167,9 +167,9 @@ hi.chart = {
                 .append("circle")
                 .attr("r", radius)
                 .attr("class", function(d) {
-                    return "tract_" + d.tractId;
-                })
-                .attr("opacity", function(d){
+                    var classStr = "tract_" + d.tractId;
+                    d.disabled = 0;
+
                     var min = 0;
                     var max = 0;
                     if(_this.currentRange !== null){
@@ -177,12 +177,13 @@ hi.chart = {
                         max = _this.currentRange.max;
 
                         if(d.rangeValue < min || d.rangeValue > max){
-                            return 0.1;
+                            d.disabled = 1;
+                            return classStr + ' disabled';
                         }else{
-                            return 1;
+                            return classStr;
                         }
                     }else{
-                        return 1;
+                        return classStr;
                     }
                 })
                 .attr("cy", function(d) {
@@ -247,8 +248,9 @@ hi.chart = {
 
         //event
         function handleMouseOver(d) {
-            //_this.lockedTractId = d.tractId;
-
+            if(d.disabled == 1){
+                return false;
+            }
             //change layer color on map to point out location of the tracts
             _this.geoLayer.eachLayer(function(layer) {
                 if (layer.feature.properties.OBJECTID == d.tractId) {
@@ -263,6 +265,9 @@ hi.chart = {
         }
 
         function handleMouseOut(d) {
+            if(d.disabled == 1){
+                return false;
+            }
             //reset
             _this.geoLayer.eachLayer(function(layer) {
                 if (layer.feature.properties.OBJECTID == d.tractId) {
@@ -547,12 +552,16 @@ hi.chart = {
 
         var item = $(container).find(selector)[0];
         var $tooltip = $(container).find('.tooltip');
+        if(!d3.select(item).data()[0]){
+            return;
+        }
         var chartId = d3.select(item).data()[0].chartId;
 
-        $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}))
+        $tooltip.html(template('chart-popup', {data: _this.currentTract, chartId: chartId}));
 
         var left = $(item).offset().left - panelLeft - $tooltip.width()/2 - 5;
         var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
+        //var top = $(item).position().top;
 
         $tooltip
             .css("left", (left < 0 ? 0 : left) + "px")
@@ -591,8 +600,15 @@ hi.chart = {
             .classed('is-locked', false)
             .moveToBack();
     },
-    onFinish: function(callback){
-        callback();
+    startLoading: function(){
+        var selector = '.chart-loading-overlay';
+
+        $(selector).css('display', 'table');
+    },
+    stopLoading: function(){
+        var selector = '.chart-loading-overlay';
+
+        $(selector).fadeOut(150);
     }
 
 };

@@ -8,23 +8,25 @@
 
     <!-- build:css ./assets/css/main.css -->
     <link href="bower_components/reset-css/reset.css" rel="stylesheet" />
-    <link href="bower_components/nprogress/nprogress.css" rel="stylesheet" />
+    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet" />
+    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.skinHTML5.css" rel="stylesheet" />
+    <link href="assets/css/loading.css" rel="stylesheet" />
     <link href="assets/css/fontello.css" rel="stylesheet" />
     <link href="assets/css/selectize.css" rel="stylesheet" />
-    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet" />
-    <!--<link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" />-->
-    <link href="bower_components/ion.rangeSlider/css/ion.rangeSlider.skinHTML5.css" rel="stylesheet" />
     <link href="assets/css/chart.css" rel="stylesheet" />
     <link href="assets/css/styles.css" rel="stylesheet" />
     <!-- endbuild -->
     <title>Health Inequity</title>
 </head>
 <body>
+<div class="page-loader" id="page-loader">
+    <div class="loading-content">Loading Data...</div>
+</div>
 <div id="header" class="header">
     <div class="help">
         <a href="javascript:;"><i class="icon-help-circled icon"></i> Help</a>
     </div>
-    <a href="javascript;" title="Return Home" class="logo">
+    <a href="./" title="Return Home" class="logo">
         <img src="assets/img/logo.svg"/>
         <div class="h-group">
             <h1>Health Observatory</h1>
@@ -54,7 +56,15 @@
         </span>
     </div>
 </div>
-<div id="map" class="map custom-popup"></div>
+<div class="map-component">
+    <div id="map" class="map custom-popup"></div>
+    <div class="map-loading-overlay">
+        <div class="loading-content">
+            Loading...
+        </div>
+    </div>
+</div>
+
 <!--<div class="map-legend legend" id="legend">-->
 <!--</div>-->
 <div class="map-popup-container" id="map-popup">
@@ -67,6 +77,15 @@
         <input type="text" name="example_name" value="" id="range-slider"/>
     </div>
     <div class="chart-legend-container legend" id="chart-legend-container">
+        <div class="chart-legend" id="chart-legend">
+            <ul>
+                <li><i class="icon-circle bottom-fifth"></i> <label>Bottom Fifth</label><br/><i class="desp">0 Tracts</i></li>
+                <li><i class="icon-circle lower-middle"></i> <label>Lower Middle</label><br/><i class="desp">0 Tracts</i></li>
+                <li><i class="icon-circle middle-class"></i> <label>Middle</label><br/><i class="desp">0 Tracts</i></li>
+                <li><i class="icon-circle upper-middle"></i> <label>Upper Middle</label><br/><i class="desp">0 Tracts</i></li>
+                <li><i class="icon-circle top-fifth"></i> <label>Top Fifth</label><br/><i class="desp">0 Tracts</i></li>
+            </ul>
+        </div>
     </div>
     <div class="panel-content">
         <div class="chart-component" id="chart-component-income">
@@ -76,7 +95,12 @@
                 </div>
                 <h3>Median Household Income, 2008-2012</h3>
             </div>
-            <div class="chart-content" id="chart-income">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-income">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-weight">
@@ -87,7 +111,12 @@
                 </div>
                 <h3>Low Birthweight Births, 2008-2012</h3>
             </div>
-            <div class="chart-content" id="chart-weight">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-weight">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-teen">
@@ -98,7 +127,12 @@
                 </div>
                 <h3>Teen Pregnancy, 2008-2012</h3>
             </div>
-            <div class="chart-content" id="chart-teen">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-teen">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-premature">
@@ -109,7 +143,12 @@
                 </div>
                 <h3>Premature Births, 2008-2012</h3>
             </div>
-            <div class="chart-content" id="chart-premature">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-premature">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-insurance">
@@ -120,7 +159,12 @@
                 </div>
                 <h3>Population without Health Insurance, 2008-2012</h3>
             </div>
-            <div class="chart-content" id="chart-insurance">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-insurance">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-hospital">
@@ -130,7 +174,12 @@
                 </div>
                 <h3>Hospital Community Facilities, 2012</h3>
             </div>
-            <div class="chart-content" id="chart-hospital">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-hospital">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
         <div class="chart-component" id="chart-component-emergency">
@@ -140,7 +189,12 @@
                 </div>
                 <h3>Emergency Medical Service Community Facilities, 2012</h3>
             </div>
-            <div class="chart-content" id="chart-emergency">
+            <div class="chart-content-wrapper">
+                <div class="chart-content" id="chart-emergency">
+                </div>
+                <div class="chart-loading-overlay">
+                    <div class="loading-content">Loading...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -153,8 +207,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
 <script src="bower_components/munkres-js/munkres.js"></script>
-<script src="bower_components/jquery-scrollto/src/static/lib/jquery-scrollto.js"></script>
-<script src="bower_components/nprogress/nprogress.js"></script>
+<!--<script src="bower_components/nprogress/nprogress.js"></script>-->
 <script src="bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
 <script src="bower_components/numeral/numeral.js"></script>
 <script src="assets/js/makefixed.js"></script>

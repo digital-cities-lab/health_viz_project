@@ -5,6 +5,7 @@
 #152740
 #E1E4E7
 #A4ADB7
+#F0F2F4
 */
 
 html,
@@ -17,7 +18,7 @@ body{
     font-family: 'Roboto', sans-serif;
     color: #445266;
     font-size: 12px;
-    background-color: #fff;
+    background-color: #F0F2F4;
 }
 a{
     color: #445266;
@@ -267,18 +268,17 @@ h3{
     right: 0;
     bottom: 0;
     top: 47px;
-    /* padding: 20px; */
     z-index: 998;
     border-left: 1px solid #E1E4E7;
-    /* box-shadow: 0 1px 4px rgba(10,20,30,0.2); */
     box-sizing: initial;
     overflow-y: auto;
 }
 .panel .range-slider{
     padding: 20px 20px 15px 20px;
     background-color: #F0F2F4;
-    max-height: 140px;
-    margin-bottom: 20px;
+    height: 140px;
+    margin-bottom: 10px;
+    overflow: hidden;
 }
 .panel .range-slider h3{
     margin-bottom: 15px;
@@ -293,7 +293,15 @@ h3{
 }
 .chart-component{
     padding: 20px;
+    background: #fff;
+    /* position: relative; */
 }
+.chart-component .chart-content-wrapper{
+    position: relative;
+    width: 480px;
+    height: 240px;
+}
+.chart-component .chart-content{/* position: relative; */}
 .chart-component .chart-title {
     margin-bottom: 10px;
 }
@@ -344,73 +352,6 @@ h3{
 }
 .irs-grid-text{
     color: #152740;
-}
-
-/*=================Box plot===================*/
-.whisker{
-    stroke-width: 2;
-}
-.box rect{
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-
-.whisker line,
-.median line{
-    stroke-width: 2px;
-}
-
-
-circle {
-    /*fill: black;*/
-    stroke: none;
-    shape-rendering: geometricPrecision;
-}
-
-circle:hover {
-    /*fill: orange;*/
-    /*stroke: orange;*/
-    /*opacity: 1;*/
-    cursor: pointer;
-}
-
-.outlier {
-    /* stroke: black; */
-    /* stroke-width: 2px; */
-}
-
-.point {
-    opacity: 0.3;
-}
-
-.axis path {
-    fill: none;
-    /*stroke: black;*/
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-
-.axis line {
-    fill: none;
-    stroke: #C6CCD3;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-
-.axis text {
-    font-size: 10px;
-}
-
-.axis text {
-    font: 10px Roboto;
-    fill: #041725;
-}
-
-.axis path,
-.axis line {
-    fill: none;
-    stroke: #C6CCD3;
-    shape-rendering: crispEdges;
 }
 
 

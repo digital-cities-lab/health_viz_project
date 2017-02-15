@@ -1,0 +1,72 @@
+/*=================Box plot===================*/
+.whisker{
+    stroke-width: 2;
+}
+.box rect{
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.whisker line,
+.median line{
+    stroke-width: 2px;
+}
+
+
+circle {
+    /*fill: black;*/
+    shape-rendering: geometricPrecision;
+    opacity: 1;
+}
+
+circle:hover {
+    /*fill: orange;*/
+    /*stroke: orange;*/
+    /*opacity: 1;*/
+    cursor: pointer;
+}
+circle.disabled{
+    opacity: 0;
+}
+circle.disabled:hover{
+    cursor: default;
+}
+
+.outlier {
+    /* stroke: black; */
+    /* stroke-width: 2px; */
+}
+
+.point {
+    opacity: 0.3;
+}
+
+.axis path {
+    fill: none;
+    /*stroke: black;*/
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis line {
+    fill: none;
+    stroke: #C6CCD3;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 10px;
+}
+
+.axis text {
+    font: 10px Roboto;
+    fill: #041725;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #C6CCD3;
+    shape-rendering: crispEdges;
+}

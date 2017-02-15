@@ -25,7 +25,6 @@
     "selectize": "^0.12.4",
     "turfjs": "*",
     "munkres-js": "^1.2.1",
-    "jquery-scrollto": "^1.4.6",
     "imagesloaded": "^4.1.1",
     "nprogress": "^0.2.0",
     "reset-css": "^2.2.0",

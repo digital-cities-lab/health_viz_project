@@ -39,14 +39,25 @@ var hi = {
         var _this = this;
 
         //loading indicator
-        NProgress.configure({ showSpinner: false });
-        NProgress.configure({ minimum: 0.1 });
+        /*NProgress.configure({
+            showSpinner: true
+        });
+        NProgress.configure({
+            //minimum: 0.1
+        });*/
+
+        /*$('body').loading({
+            stoppable: true,
+            zIndex: 1100
+        });*/
+
         $(document)
             .ajaxStart(function() {
-                NProgress.start();
+                //NProgress.start();
             })
             .ajaxComplete(function() {
-                NProgress.done();
+                //NProgress.done();
+                $("#page-loader").fadeOut();
             });
 
         //selectize
@@ -138,6 +149,7 @@ var hi = {
     },
     createRangeSlider: function(){
         var _this = hi;
+        var isChanging = false;
         var threshold = _this.currentGroupThreshold;
         var unit = _this.process.getUnit();
 
@@ -154,24 +166,51 @@ var hi = {
             hide_from_to: false,
             grid: true,
             grid_num: 5,
-            onStart: function () {
-                _this.currentRange = {
-                    min: threshold.minVal,
-                    max: threshold.maxVal
-                };
+            onChange: function () {
+                var isInitialized = _this.slider !== null;
+
+                if(isChanging){
+                    return false;
+                }else{
+                    isChanging = true;
+
+                    if(_this.isLocked){
+                        //remove lock status
+                        _this.lockedTractId = null;
+                        _this.geomap.resetLocker();
+                        _this.chart.resetLocker();
+                    }
+
+                    if(isInitialized) {
+                        _this.geomap.startLoading();
+                        _this.chart.startLoading();
+                    }
+                    console.log('change');
+                }
             },
             onFinish: function(data){
+                var isInitialized = _this.slider !== null;
+
                 _this.currentRange = {
                     min: data.from,
                     max: data.to
                 };
 
-                //_this.chart.updateAllBoxplots();
-                console.log(_this.currentRange);
+                if(isInitialized){
+
+                    _this.chart.updateAllBoxplots();
+                    _this.geomap.updateMap();
+                    console.log(_this.currentRange);
+
+                    _this.geomap.stopLoading();
+                    _this.chart.stopLoading();
+                }else{
+                    _this.slider = $("#range-slider").data("ionRangeSlider");
+                }
+
+                isChanging = false;
             }
         });
-
-        _this.slider = $("#range-slider").data("ionRangeSlider");
     },
     updateRangeSlider: function(){
         var _this = hi;
@@ -194,4 +233,5 @@ var hi = {
             $('.irs-line').css('background-image', 'url(./assets/img/slider_reversed_bg.png)');
         }
     }
+
 };

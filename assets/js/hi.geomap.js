@@ -56,7 +56,7 @@ hi.geomap = {
             _this.geoLayer.clearLayers();
         }
         _this.geomap.createGeoLayer();
-        _this.geomap.createLegend();
+        //_this.geomap.createLegend();
     },
     createGeoLayer: function(){
         var _this = hi;
@@ -76,23 +76,38 @@ hi.geomap = {
             var cellVal = cell.properties[chartCode] - 0;
             var groupIndex = _this.process.getGroupIndex(cellVal);
             var color = _this.currentColors[groupIndex];
-/*
-            if(type === 'carto'){
+            var isDisabled = false;
+
+            var min = 0;
+            var max = 0;
+            if(_this.currentRange !== null){
+                min = _this.currentRange.min;
+                max = _this.currentRange.max;
+
+                if(cellVal < min || cellVal > max){
+                    isDisabled = true;
+                    cell.properties.disabled = 1;
+                }
+            }
+
+            cell.properties.style = {
+                fillColor: color,
+                fillOpacity: 1,
+                color: _this.strokeColor,
+                weight: 2,
+                opacity: 0
+            };
+
+            if(isDisabled){
                 cell.properties.style = {
                     fillColor: color,
-                    fillOpacity: 1,
-                    opacity: 0,
-                    color: color
-                };
-            }else{*/
-                cell.properties.style = {
-                    fillColor: color,
-                    fillOpacity: 1,
+                    fillOpacity: 0,
                     color: _this.strokeColor,
                     weight: 2,
                     opacity: 0
                 };
-            //}
+            }
+
         });
 
         //apply styles and events
@@ -113,7 +128,10 @@ hi.geomap = {
         //highlight feature when hovering
         function handleMouseOver(e) {
             var layer = e.target;
-            //_this.lockedTractId = layer.feature.properties.OBJECTID;
+
+            if(layer.feature.properties.disabled && layer.feature.properties.disabled == 1){
+                return false;
+            }
 
             _this.geomap.setHighlight(layer);
             _this.chart.setHighlight('.tract_' + layer.feature.properties.OBJECTID);
@@ -122,7 +140,10 @@ hi.geomap = {
         //reset highlight
         function handleMouseOut(e) {
             var layer = e.target;
-            //_this.lockedTractId = layer.feature.properties.OBJECTID;
+
+            if(layer.feature.properties.disabled && layer.feature.properties.disabled == 1){
+                return false;
+            }
 
             _this.geomap.resetHighlight(layer);
             _this.chart.resetHighlight('.tract_' + layer.feature.properties.OBJECTID);
@@ -131,6 +152,10 @@ hi.geomap = {
         //lock feature
         function handleClick(e){
             var layer = e.target;
+
+            if(layer.feature.properties.disabled && layer.feature.properties.disabled == 1){
+                return false;
+            }
 
             //remove old lock layer
             if(_this.isLocked) {
@@ -330,5 +355,20 @@ hi.geomap = {
         _this.geomap.closeFixedPopup();
         _this.lockedLayer = null;
         _this.isLocked = false;
+    },
+    startLoading: function(){
+        var selector = '.map-loading-overlay';
+        var $map = $('#map');
+
+        $(selector).css({
+            width: $map.width(),
+            height: $map.height(),
+            display: 'table'
+        });
+    },
+    stopLoading: function(){
+        var selector = '.map-loading-overlay';
+
+        $(selector).fadeOut(150);
     }
 };
