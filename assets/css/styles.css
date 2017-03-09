@@ -5,7 +5,7 @@
 #152740
 #E1E4E7
 #A4ADB7
-#F0F2F4
+#F8F9FA
 */
 
 html,
@@ -18,7 +18,7 @@ body{
     font-family: 'Roboto', sans-serif;
     color: #445266;
     font-size: 12px;
-    background-color: #F0F2F4;
+    background-color: #F8F9FA;
 }
 a{
     color: #445266;
@@ -87,7 +87,7 @@ h3{
     font-family: inherit;
     font-size: 12px;
     line-height: 18px;
-    -webkit-font-smoothing: inherit;
+    /*-webkit-font-smoothing: inherit;*/
     border: 1px solid #e1e4e7;
     padding: 6px 8px;
     display: inline-block;
@@ -275,13 +275,14 @@ h3{
 }
 .panel .range-slider{
     padding: 20px 20px 15px 20px;
-    background-color: #F0F2F4;
+    background-color: #F8F9FA;
     height: 140px;
     margin-bottom: 10px;
     overflow: hidden;
 }
 .panel .range-slider h3{
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    line-height: 24px;
 }
 .panel .panel-header{
     background: #041725;
@@ -309,6 +310,9 @@ h3{
     line-height: 24px;
     text-transform: capitalize;
 }
+.chart-component .chart-title .icon-info{
+/*     opacity: 0.4; */
+}
 
 
 /*===========slider========*/
@@ -324,8 +328,10 @@ h3{
     /*background-image: url(../img/slider_bg.png);
     background-repeat: repeat-y;*/
     background: none;
-    border-top: 0;
-    border-bottom: 0;
+    border-top: 2px solid #152740;
+    border-bottom: 2px solid #152740;
+    height: 10px;
+    top: 32px;
 }
 .irs-slider{
     border: 0 none;
@@ -342,7 +348,7 @@ h3{
     padding: 0 5px;
     color: #152740;
     font-weight: lighter;
-    opacity: 0.5;
+    /* opacity: 0.5; */
 }
 .irs-grid-pol{
     background: #a6adb5;
@@ -352,6 +358,7 @@ h3{
 }
 .irs-grid-text{
     color: #152740;
+    opacity: 0.5;
 }
 
 
@@ -480,6 +487,31 @@ h3{
 }
 .tooltip strong {
     color: #152740;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 12px;
 }
+
+/*=================Tipsy====================*/
+.tipsy {
+    padding: 5px;
+    font-size: 10px;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+    background-repeat: no-repeat;
+    background-image: url(../img/tipsy.gif);
+}
+.tipsy-inner {
+    padding: 6px 10px 5px 10px;
+    background-color: black;
+    color: white;
+    max-width: 200px;
+    text-align: center;
+}
+.tipsy-inner {
+    border-radius:2px;
+}
+.tipsy-north { background-position: top center; }
+.tipsy-south { background-position: bottom center; }
+.tipsy-east { background-position: right center; }
+.tipsy-west { background-position: left center; }
+

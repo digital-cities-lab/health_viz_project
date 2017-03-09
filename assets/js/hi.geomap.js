@@ -95,7 +95,7 @@ hi.geomap = {
 
         geoData.features.forEach(function(cell, index) {
             //get info
-            var tractIndex = relationObj[index];
+            var tractIndex = _this.currentMapType === 'carto' ? index : relationObj[index];
             cell.properties = _this.healthData[tractIndex];
 
             var cellVal = cell.properties[chartCode] - 0;
@@ -244,7 +244,7 @@ hi.geomap = {
             tract_id: properties.OBJECTID,
             tract_name: 'TRACT ' + properties.NAME10,
             total_pop: properties.Total_Population,
-            total_birth_pop: properties.Total_Births__2008_2012,
+            total_birth_pop: properties.Total_Births,
             color: _this.isLocked ? _this.currentColor : layer.options.fillColor,
             income: {
                 name: _this.indicatorNames[0],
@@ -252,19 +252,19 @@ hi.geomap = {
             },
             weight: {
                 name: _this.indicatorNames[1],
-                num: properties.LowBirthw_2500_grams_2008_2012,
-                pct: format(properties.LowBirthw_2500_grams_2008_2012/properties.Total_Births__2008_2012)
+                num: properties.LowBirthw,
+                pct: format(properties.LowBirthw/properties.Total_Births)
             },
             teen: {
                 name: _this.indicatorNames[2],
-                num: properties.BirthsTeens_15_19_2008_2012,
-                pct: format(properties.BirthsTeens_15_19_2008_2012/properties.Total_Births__2008_2012)
+                num: properties.BirthsTeens,
+                pct: format(properties.BirthsTeens/properties.Total_Births)
 
             },
             premature: {
                 name: _this.indicatorNames[3],
-                num: properties.PreBirths_37wks_Gest_2008_2012,
-                pct: format(properties.PreBirths_37wks_Gest_2008_2012/properties.Total_Births__2008_2012)
+                num: properties.PreBirths,
+                pct: format(properties.PreBirths/properties.Total_Births)
 
             },
             insurance: {

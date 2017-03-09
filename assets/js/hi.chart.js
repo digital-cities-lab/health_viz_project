@@ -169,6 +169,7 @@ hi.chart = {
                 .append("circle")
                 .attr("r", radius)
                 .attr("class", function(d) {
+                    var value = settings.type === 'num'? d.value : d.pct;
                     var classStr = "tract_" + d.tractId;
                     d.disabled = 0;
 
@@ -180,13 +181,16 @@ hi.chart = {
 
                         if(d.rangeValue < min || d.rangeValue > max){
                             d.disabled = 1;
-                            return classStr + ' disabled';
-                        }else{
-                            return classStr;
+                            //return classStr + ' disabled';
+                            classStr += ' disabled';
                         }
-                    }else{
-                        return classStr;
                     }
+
+                    if (value < lowerWhisker || value > upperWhisker){
+                        classStr += ' outlier';
+                    }
+
+                    return classStr;
                 })
                 .attr("cy", function(d) {
                     return randomJitter();
@@ -198,7 +202,7 @@ hi.chart = {
                 .attr("fill", function(d){
                     var value = settings.type === 'num'? d.value : d.pct;
                     if (value < lowerWhisker || value > upperWhisker){
-                        d.color = '#F7BB4D';
+                        d.color = _this.outlierColor;
                     }else{
                         d.color = colors[groupIndex];
                     }
@@ -214,37 +218,37 @@ hi.chart = {
                 .attr("class", "whisker")
                 .attr("x1",  xScale(lowerWhisker))
                 .attr("x2",  xScale(q1Val))
-                .attr("stroke", _this.strokeColor)
                 .attr("y1", midline)
-                .attr("y2", midline);
+                .attr("y2", midline)
+                .attr('stroke', _this.strokeColor);
 
             container.append("line")
                 .attr("class", "whisker")
                 .attr("x1",  xScale(q3Val))
                 .attr("x2",  xScale(upperWhisker))
-                .attr("stroke", _this.strokeColor)
                 .attr("y1", midline)
-                .attr("y2", midline);
+                .attr("y2", midline)
+                .attr('stroke', _this.strokeColor);
 
             //draw rect for iqr
             container.append("rect")
                 .attr("class", "box")
-                .attr("stroke", _this.strokeColor)
-                .attr("fill", "none")
                 .attr("x", xScale(q1Val))
                 .attr("y", midline - boxHeight / 2)
                 .attr("width", xScale(iqr))
-                .attr("height", boxHeight);
+                .attr("height", boxHeight)
+                .attr('stroke', _this.strokeColor)
+                .attr('fill', 'none');
 
             //draw vertical line at median
             container.append("line")
                 .attr("class", "median")
-                .attr("stroke", _this.strokeColor)
-                .attr("stroke-width", 2)
                 .attr("x1", xScale(medianVal))
                 .attr("x2", xScale(medianVal))
                 .attr("y1", midline - boxHeight / 2)
-                .attr("y2", midline + boxHeight / 2);
+                .attr("y2", midline + boxHeight / 2)
+                .attr('stroke', _this.strokeColor)
+                .attr('stroke-width', 2);
 
         }
 
@@ -369,7 +373,7 @@ hi.chart = {
 
                 //calculate percentage
                 if(totalBirth === 0){
-                    totalBirth = item['Total_Births__2008_2012'] - 0;
+                    totalBirth = item['Total_Births'] - 0;
                 }
 
                 if(tmpId === 'weight' || tmpId === 'teen' || tmpId === 'premature'){
@@ -453,18 +457,22 @@ hi.chart = {
     setHighlight: function(selector, data){
         var _this = hi;
         var data = data || {};
-        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '').replace(' outlier', '');
         var elements = d3.selectAll(selector + ':not(.is-locked)');
 
         //update circles
         elements
             .attr('r', 5)
-            .style({
+            .attr('stroke', _this.strokeColor)
+            .attr('stroke-width', 2)
+            //.attr('fill', data.color)
+            .attr('stroke-opacity', 1)
+            /*.style({
                 'stroke': _this.strokeColor,
                 'stroke-width': 2,
                 'fill': data.color,
                 'stroke-opacity': 1
-            })
+            })*/
             .moveToFront();
 
 
@@ -486,21 +494,22 @@ hi.chart = {
             _this.chart.closeTooltip();
         }
 
-        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '').replace(' outlier', '');
         //if the dot has class "is-locked", prevent from removing highlighting style
         var elements = d3.selectAll(selector + ':not(.is-locked)');
 
         elements
             .attr('r', 2.5)
-            .style({
+            .attr('stroke-opacity', 0)
+            /*.style({
                 'stroke-opacity': 0
-            })
+            })*/
             .moveToBack();
 
     },
     setLocker: function(selector){
         var _this = hi;
-        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '');
+        var selector = typeof(selector) === 'string' ? selector : '.' + selector.getAttribute('class').replace(' is-locked', '').replace(' outlier', '');
 
         //lock dots
         _this.chart.setLockedCircle(selector);
@@ -524,7 +533,7 @@ hi.chart = {
         var _this = hi;
 
         //switch between "persons" and "percentage"
-        $('.button-group').on('click', '.button:not(.active)', function(){
+        $('.chart-title .button-group').on('click', '.button:not(.active)', function(){
             var $this = $(this);
             var chartId = $this.data('chartId');
             var type = $this.data('type');
@@ -567,8 +576,10 @@ hi.chart = {
         var top = $(item).offset().top + $(item).scrollTop() + $panel.scrollTop() - parseInt($panel.css('top')) - $tooltip.height() - 30;
 
         $tooltip
-            .css("left", (left < 0 ? 0 : left) + "px")
-            .css("top", top + "px")
+            .css({
+                'left': (left < 0 ? 0 : left) + 'px',
+                'top': top + 'px'
+            })
             .show();
 
     },
@@ -581,27 +592,43 @@ hi.chart = {
 
         elements
             .attr('r', 5)
-            .style({
+            /*.style({
                 'stroke': _this.strokeColor,
                 'stroke-width': 2,
                 'fill': _this.strokeColor,
                 'stroke-opacity': 1
-            })
+            })*/
+            .attr('stroke', _this.strokeColor)
+            .attr('stroke-width', 2)
+            .attr('fill', _this.strokeColor)
+            .attr('stroke-opacity', 1)
             .classed('is-locked', true)
             .moveToFront();
     },
     resetLockedCircle: function(selector){
         var _this = hi;
-        var elements = d3.selectAll(selector);
+        var elements = d3.selectAll(selector)[0];
 
-        elements
-            .attr('r', 2.5)
-            .style({
-                'stroke-opacity': 0,
-                'fill': _this.currentColor
-            })
-            .classed('is-locked', false)
-            .moveToBack();
+        elements.forEach(function(element){
+            var color = _this.currentColor;
+
+            var element = d3.select(element);
+            if(element.classed('outlier')){
+                color = _this.outlierColor;
+            }
+
+            element
+                .attr('r', 2.5)
+                .attr('stroke-opacity', 0)
+                .attr('fill', color)
+                /*.style({
+                    'stroke-opacity': 0,
+                    'fill': color
+                })*/
+                .classed('is-locked', false)
+                .moveToBack();
+        });
+
     },
     startLoading: function(){
         var selector = '.chart-loading-overlay';

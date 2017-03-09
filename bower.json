@@ -28,6 +28,7 @@
     "imagesloaded": "^4.1.1",
     "nprogress": "^0.2.0",
     "reset-css": "^2.2.0",
-    "artTemplate": "^3.0.1"
+    "artTemplate": "^3.0.1",
+    "tipsy": "^0.1.7"
   }
 }

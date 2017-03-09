@@ -38,15 +38,22 @@
             <input type="text" name="" id="" class="input" placeholder="Search Your Location"/>
             <a href="javascript:;" class="icon-search"></a>
         </div>
-        <select class="selectbox selectbox-long" id="indicator-select">
-            <option value="income">Median Household Income</option>
-            <option value="weight">Low Birthweight Births</option>
-            <option value="teen">Teen Pregnancy</option>
-            <option value="premature">Premature Births</option>
-            <option value="insurance">Population without Health Insurance</option>
-            <!--<option value="hospital">Access to Hospital Community Facilities</option>-->
-            <!--<option value="emergency">Access to Emergency Medical Service Community Facilities</option>-->
-        </select>
+        <span class="show">
+            <label class="label">Show</label>
+            <select class="selectbox selectbox-long" id="indicator-select">
+                <option value="income">Median Household Income</option>
+                <option value="weight">Low Birthweight Births</option>
+                <option value="teen">Teen Pregnancy</option>
+                <option value="premature">Premature Births</option>
+                <option value="insurance">Population without Health Insurance</option>
+                <!--<option value="hospital">Access to Hospital Community Facilities</option>-->
+                <!--<option value="emergency">Access to Emergency Medical Service Community Facilities</option>-->
+            </select>
+            <select class="selectbox" id="data-type-select">
+                <option value="num">Number</option>
+                <option value="pct">Percentage</option>
+            </select>
+        </span>
         <span class="view-by">
             <label class="label">View by</label>
             <select class="selectbox selectbox-mid" id="map-type-select">
@@ -73,7 +80,7 @@
 </div>
 <div class="panel" id="panel">
     <div class="range-slider">
-        <h3>Median Household Income ($)</h3>
+        <div class="slider-title" id="slider-title"></div>
         <input type="text" name="example_name" value="" id="range-slider"/>
     </div>
     <div class="chart-legend-container legend" id="chart-legend-container">
@@ -93,7 +100,7 @@
                 <div class="button-group">
                     <div class="button active" data-type="num" data-chart-id="income">Dollars</div>
                 </div>
-                <h3>Median Household Income, 2008-2012</h3>
+                <h3>Median Household Income, 2008-2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-income">
@@ -109,7 +116,7 @@
                     <div class="button active" data-type="num" data-chart-id="weight">Persons</div>
                     <div class="button" data-type="pct" data-chart-id="weight">Percentage</div>
                 </div>
-                <h3>Low Birthweight Births, 2008-2012</h3>
+                <h3>Low Birthweight Births, 2008-2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-weight">
@@ -125,7 +132,7 @@
                     <div class="button active" data-type="num" data-chart-id="teen">Persons</div>
                     <div class="button" data-type="pct" data-chart-id="teen">Percentage</div>
                 </div>
-                <h3>Teen Pregnancy, 2008-2012</h3>
+                <h3>Teen Pregnancy, 2008-2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-teen">
@@ -141,7 +148,7 @@
                     <div class="button active" data-type="num" data-chart-id="premature">Persons</div>
                     <div class="button" data-type="pct" data-chart-id="premature">Percentage</div>
                 </div>
-                <h3>Premature Births, 2008-2012</h3>
+                <h3>Premature Births, 2008-2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-premature">
@@ -157,7 +164,7 @@
                     <div class="button active" data-type="num" data-chart-id="insurance">Persons</div>
                     <div class="button" data-type="pct" data-chart-id="insurance">Percentage</div>
                 </div>
-                <h3>Population without Health Insurance, 2008-2012</h3>
+                <h3>Population without Health Insurance, 2008-2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-insurance">
@@ -172,7 +179,7 @@
                 <div class="button-group">
                     <div class="button active" data-type="num" data-chart-id="hospital">Facilities</div>
                 </div>
-                <h3>Hospital Community Facilities, 2012</h3>
+                <h3>Hospital Community Facilities, 2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-hospital">
@@ -187,7 +194,7 @@
                 <div class="button-group">
                     <div class="button active" data-type="num" data-chart-id="emergency">Facilities</div>
                 </div>
-                <h3>Emergency Medical Service Community Facilities, 2012</h3>
+                <h3>Emergency Medical Service Community Facilities, 2012 <i class="icon-info" original-title="Median Household Income"></i></h3>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-emergency">
@@ -207,7 +214,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/selectize/dist/js/standalone/selectize.js"></script>
 <script src="bower_components/munkres-js/munkres.js"></script>
-<!--<script src="bower_components/nprogress/nprogress.js"></script>-->
+<script src="bower_components/tipsy/src/javascripts/jquery.tipsy.js"></script>
 <script src="bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
 <script src="bower_components/numeral/numeral.js"></script>
 <script src="assets/js/makefixed.js"></script>

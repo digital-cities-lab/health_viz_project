@@ -136,6 +136,7 @@ hi.process = {
     getGroupThreshold: function(chartCode){
         //process data
         var _this = hi;
+
         var data = $.merge([], _this.healthData).sort(
             function(a, b) {
                 return d3.ascending(a[chartCode] - 0, b[chartCode] - 0);
@@ -146,7 +147,9 @@ hi.process = {
         var p40 = 0;
         var p60 = 0;
         var p80 = 0;
+        var range = 0;
 
+        console.log(data);
         //use d3 to divide data into quintile groups
         $.each(data, function(){
             var first = data[0];
@@ -159,10 +162,16 @@ hi.process = {
         });
 
         maxVal = data[data.length - 1][chartCode] - 0;
-        p20 = 0.2 * (maxVal - minVal);
+        /*p20 = 0.2 * (maxVal - minVal);
         p40 = 0.4 * (maxVal - minVal);
         p60 = 0.6 * (maxVal - minVal);
-        p80 = 0.8 * (maxVal - minVal);
+        p80 = 0.8 * (maxVal - minVal);*/
+
+        range = (maxVal - minVal)/5;
+        p20 = minVal + range;
+        p40 = minVal + 2 * range;
+        p60 = minVal + 3 * range;
+        p80 = minVal + 4 * range;
 
         function changeFormat(number){
             return Math.floor(number * 100)/100
@@ -179,7 +188,8 @@ hi.process = {
     getGroupIndex: function(value, groupThreshold, chartCode){
         var _this = hi;
         var chartCode = chartCode || _this.currentIndicatorCode;
-        var groupThreshold = groupThreshold || _this.process.getGroupThreshold(chartCode);
+        //var groupThreshold = groupThreshold || _this.process.getGroupThreshold(chartCode);
+        var groupThreshold = groupThreshold || _this.currentGroupThreshold;
         var groupIndex = 0;
 
         if(groupThreshold.p80 < value && value <= groupThreshold.maxVal){
@@ -214,23 +224,28 @@ hi.process = {
         var unit = '';
         var indicator = _this.currentIndicatorId;
 
-        switch(indicator){
-            case 'income':
-                unit = 'Dollars';
-                break;
-            case 'weight':
-            case 'teen':
-            case 'premature':
-            case 'insurance':
-                unit = 'Persons';
-                break;
-            case 'hospital':
-            case 'emergency':
-                unit = 'Facilities'
-                break;
-            default:
-                unit = '';
+        if(_this.currentDataType === 'num'){
+            switch(indicator){
+                case 'income':
+                    unit = 'Dollars';
+                    break;
+                case 'weight':
+                case 'teen':
+                case 'premature':
+                case 'insurance':
+                    unit = 'Persons';
+                    break;
+                case 'hospital':
+                case 'emergency':
+                    unit = 'Facilities'
+                    break;
+                default:
+                    unit = '';
+            }
+        }else{
+            unit = 'Percentage'
         }
+
 
         return unit;
 
