@@ -4,13 +4,19 @@ hi.geomap = {
 
         //create map
         var mapStyleUrl = 'mapbox://styles/xiaoxuezhang/ciy0tczyo005k2rqjn4oncbhp';
-        L.mapbox.accessToken = 'pk.eyJ1IjoieGlhb3h1ZXpoYW5nIiwiYSI6ImNpc2dzcWN5eTAwMGoyeW1zcTI5OTQ3YTgifQ.DCqBTREvXqcE1iEeVNwoYQ';
+        L.mapbox.accessToken = _this.accessToken;
 
-        var map = L.mapbox.map('map')
+        var map = L.map('map', {zoomControl: false})
             .setView([33.8356178, -84.3984737], 9);
 
-        var styleLayer = L.mapbox.styleLayer(mapStyleUrl)
+        L.mapbox.styleLayer(mapStyleUrl)
             .addTo(map);
+
+
+        //add zoom control with your options
+        L.control.zoom({
+            position:'topright'
+        }).addTo(map);
 
         //map settings
         map.scrollWheelZoom.disable();
@@ -87,7 +93,6 @@ hi.geomap = {
     createGeoLayer: function(){
         var _this = hi;
         var geoData = _this.currentMapType === 'carto' ? _this.cartoMapData : _this.gridMapData;
-        //var type = _this.currentMapType;
         var map = _this.map;
         var chartCode = _this.currentIndicatorCode;
         var relationObj = _this.process.transformToObject();
@@ -104,16 +109,16 @@ hi.geomap = {
             var isDisabled = false;
             cell.properties.disabled = 0;
 
-            var min = 0;
-            var max = 0;
+            var min = _this.currentGroupThreshold.minVal;
+            var max = _this.currentGroupThreshold.maxVal;
             if(_this.currentRange !== null){
                 min = _this.currentRange.min;
                 max = _this.currentRange.max;
+            }
 
-                if(cellVal < min || cellVal > max){
-                    isDisabled = true;
-                    cell.properties.disabled = 1;
-                }
+            if(cellVal < min || cellVal > max){
+                isDisabled = true;
+                cell.properties.disabled = 1;
             }
 
             cell.properties.style = {
@@ -124,6 +129,7 @@ hi.geomap = {
                 opacity: 0
             };
 
+            //Disabled
             if(isDisabled){
                 cell.properties.style = {
                     fillColor: color,
@@ -139,9 +145,19 @@ hi.geomap = {
         //apply styles and events
         _this.geoLayer = L.geoJson(geoData, {style: {smoothFactor: 0}, onEachFeature: onEachFeature})
             .eachLayer(function(l) {
-                l.setStyle(l.feature.properties.style);
+                var style = l.feature.properties.style;
+                var tractId = l.feature.properties['OBJECTID'];
+
+                //Locked
+                if(_this.isLocked && _this.lockedTractId === tractId){
+                    style.fillColor = _this.strokeColor;
+                    _this.lockedLayer = l;
+                }
+
+                l.setStyle(style);
             })
             .addTo(map);
+
 
         function onEachFeature(feature, layer) {
             layer.on({
@@ -239,9 +255,10 @@ hi.geomap = {
         var _this = hi;
         var properties = layer.feature.properties;
         var $popup = $('#map-popup');
+        var tractId = properties.OBJECTID;
 
         var data = {
-            tract_id: properties.OBJECTID,
+            tract_id: tractId,
             tract_name: 'TRACT ' + properties.NAME10,
             total_pop: properties.Total_Population,
             total_birth_pop: properties.Total_Births,
@@ -275,14 +292,14 @@ hi.geomap = {
             },
             hospital: {
                 name: _this.indicatorNames[5],
-                num: properties.Hospital_Amount,
-                max: 3
+                num: _this.facilityCountData.hospital[tractId],
+                max: 2
 
             },
             emergency: {
                 name: _this.indicatorNames[6],
-                num: properties.Emergency_Amount,
-                max: 5
+                num: _this.facilityCountData.emergency[tractId],
+                max: 4
             }
         };
 
@@ -395,5 +412,58 @@ hi.geomap = {
         var selector = '.map-loading-overlay';
 
         $(selector).fadeOut(150);
+    },
+    setLockerByAddress: function(address){
+        var _this = hi;
+        var address = encodeURIComponent(address);
+        var requestUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '%20Atlanta%20Atlanta%20GA.json?access_token=' + _this.accessToken + '&country=us&types=address&autocomplete=true';
+
+        if(_this.isLocked){
+            _this.lockedTractId = null;
+            _this.geomap.resetLocker();
+            _this.chart.resetLocker();
+        }
+
+        $.get(requestUrl, function(data){
+            console.log(data);
+
+            var center = data.features[0].center;
+            //var center = [-84.3963, 33.7756];
+
+            var point = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": center
+                }
+            };
+
+            $.each(_this.cartoMapData.features, function(index, geoItem){
+                var poly = {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": geoItem.geometry
+                };
+
+                //check inside
+                if(turf.inside(point, poly)){
+                    _this.lockedTractId = geoItem.properties.OBJECTID;
+
+                    //change layer color on map to point out location of the tracts
+                    _this.geoLayer.eachLayer(function(layer) {
+                        if (layer.feature.properties.OBJECTID == _this.lockedTractId) {
+
+                            _this.geomap.setLocker(layer);
+
+                            return false;
+                        }
+                    });
+
+                    _this.chart.setLocker('.tract_' + _this.lockedTractId);
+                }
+
+            });
+        })
     }
 };

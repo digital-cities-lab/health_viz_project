@@ -1,6 +1,10 @@
 var hi = {
     healthData: {},
     facilityProjection: {},
+    facilityCountData: {
+        hospital: {},
+        emergency: {}
+    },
     gridMapData: {},
     cartoMapData: {},
     map: null,
@@ -41,6 +45,7 @@ var hi = {
     lockedLayer: null,
     slider: null,
     selectList: {},
+    accessToken: 'pk.eyJ1IjoieGlhb3h1ZXpoYW5nIiwiYSI6ImNpc2dzcWN5eTAwMGoyeW1zcTI5OTQ3YTgifQ.DCqBTREvXqcE1iEeVNwoYQ',
 
     init: function(){
         var _this = this;
@@ -49,7 +54,7 @@ var hi = {
             .ajaxStart(function() {
             })
             .ajaxComplete(function() {
-                $("#page-loader").fadeOut();
+                $("#page-loader").delay(400).fadeOut(300);
             });
 
         //selectize
@@ -68,11 +73,12 @@ var hi = {
         //change color pallette
         _this.currentColors = _this.groupColors;
 
-        $.when($.getJSON('data/health_inside_atlanta.json'), $.getJSON('data/grid.geojson'), $.getJSON('data/facility_projection.json')).done(function(a1, a2, a3){
+        $.when($.getJSON('data/health_inside_atlanta.json'), $.getJSON('data/grid.geojson'), $.getJSON('data/facility_projection.json'), $.getJSON('data/boundaries.geojson')).done(function(a1, a2, a3, a4){
             //cache data to show and update charts
             _this.healthData = a1[0];
             _this.gridMapData = a2[0];
             _this.facilityProjection = a3[0];
+            _this.cartoMapData = a4[0];
 
 
             if(_this.currentDataType == 'pct'){
@@ -87,6 +93,7 @@ var hi = {
             //_this.geomap.createCartoMap();
 
             _this.createRangeSlider();
+
         });
 
         //add events
@@ -98,6 +105,7 @@ var hi = {
     addEventListener: function(){
         var _this = hi;
 
+        //change indicators
         $('#indicator-select').on('change', function(e){
             e.preventDefault();
 
@@ -110,12 +118,29 @@ var hi = {
             _this.currentIndicatorCode = _this.indicatorCodes[_this.indicatorIds.indexOf(indicatorId)];
             _this.currentIndicatorName = _this.indicatorNames[_this.indicatorIds.indexOf(indicatorId)];
 
-            //group data
-            //if(_this.currentIndicatorId == 'income'){
-                _this.currentDataType = 'num';
-                //change data type selector
-                _this.selectList['data-type-select'][0].selectize.setValue('num', 1);
-            //}
+            //reset data type to number
+            _this.currentDataType = 'num';
+            //change data type selector
+            var dataTypeSelect = _this.selectList['data-type-select'][0].selectize;
+            dataTypeSelect.setValue('num', 1);
+
+            if(indicatorId == 'income'){
+                //dataTypeSelect.clearOptions();
+                dataTypeSelect.removeOption('pct');
+            }else{
+                var options = dataTypeSelect.options;
+                var cnt = 0;
+                for(k in options){
+                    cnt++;
+                }
+                if(cnt < 2){
+                    dataTypeSelect.addOption({
+                        value: 'pct',
+                        text: 'Percentage'
+                    });
+                }
+            }
+
             //group data
             if(_this.currentDataType == 'pct'){
                 _this.currentIndicatorCode = 'Pct_' + _this.currentIndicatorCode;
@@ -136,7 +161,6 @@ var hi = {
             //change legend title
             _this.updateRangeSlider();
 
-
             $('#panel').animate({ scrollTop: 0 }, 'slow');
 
             //show map and charts
@@ -152,6 +176,7 @@ var hi = {
             //$('#panel').animate({ scrollTop: 0 }, 'fast');
         });
 
+        //change map types
         $('#map-type-select').on('change', function(e){
             e.preventDefault();
 
@@ -172,6 +197,7 @@ var hi = {
             }, 5);
         });
 
+        //switch between number and percentage
         $('#data-type-select').on('change', function(e){
             e.preventDefault();
 
@@ -203,6 +229,68 @@ var hi = {
                 }
             }, 5);
         });
+
+        //search
+        var $searchBox = $('.searchbox');
+        $searchBox.on('click', '.btn-search', function(e){
+            e.preventDefault();
+
+            var address = $searchBox.find('input').val();
+            _this.geomap.setLockerByAddress(address);
+        });
+        $searchBox.find('input').keyup(function(e){
+            var $this = $(this);
+            var $autoSuggestions = $this.siblings('.auto-suggestions');
+            var address = $this.val();
+            if(address.length < 3){
+                return;
+            }
+
+            if (e.which == 13) {
+                e.preventDefault();
+                _this.geomap.setLockerByAddress(address);
+            }else{
+                //auto suggestions
+                address = encodeURIComponent(address);
+                var requestUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + _this.accessToken + '&country=us&types=address&autocomplete=true';
+                var suggestionStr = '';
+
+                $.get(requestUrl, function(data){
+                    //5 suggestions
+                    $.each(data.features, function(index, feature){
+                        var tmp = '<li>' + feature.place_name + '</li>';
+                        suggestionStr += tmp;
+                    });
+
+                    $autoSuggestions.find('ul').html(suggestionStr);
+                });
+            }
+
+            $autoSuggestions.show();
+
+        });
+        $searchBox.on('click', '.auto-suggestions li', function(e){
+            e.preventDefault();
+            var $this = $(this);
+
+            var address = $this.text();
+            _this.geomap.setLockerByAddress(address);
+
+            //hide autosuggestions
+            $searchBox.find('input').val(address);
+            $searchBox.find('.auto-suggestions').hide();
+
+        });
+
+        //click other place, remove any layover
+        $(document).click(function(e) {
+            var target = e.target;
+
+            if (!$(target).is('.auto-suggestions') && !$(target).parents().is('.auto-suggestions')) {
+                $('.auto-suggestions').hide();
+            }
+        });
+
     },
     createRangeSlider: function(){
         var _this = hi;

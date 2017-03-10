@@ -143,22 +143,53 @@ h3{
 .header .filter{padding: 7px 0;}
 .header .searchbox{
     position: relative;
-    width: 180px;
+    width: 220px;
     height: 32px;
     display: inline-block;
     margin-right: 10px;
 }
 .header .searchbox .icon-search{
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 1px;
+    top: 1px;
     display: block;
     color: #445266;
     text-align: center;
     width: 32px;
-    height: 32px;
+    height: 30px;
     font-size: 16px;
-    line-height: 31px;
+    line-height: 29px;
+    background: #fff;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0.5+0,1+100 */
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0.7) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(255,255,255,0.7) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+.header .searchbox .auto-suggestions{
+    position: absolute;
+    z-index: 100;
+    background: #ffffff;
+    margin: -1px 0 0 0;
+    border-top: 0 none;
+    box-sizing: border-box;
+    box-shadow: 0 1px 3px 0 rgba(31, 56, 76, 0.2);
+    border-radius: 0 0 2px 2px;
+    display: none;
+    width: 220px;
+}
+.header .searchbox .auto-suggestions ul{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.header .searchbox .auto-suggestions li{
+    cursor: pointer;
+    overflow: hidden;
+    padding: 5px 8px;
+    display: block;
+    line-height: 19px;
+}
+.header .searchbox .auto-suggestions li:hover{
+    background-color: #e1e4e7;
+    color: #000000;
 }
 .header .filter *{
     vertical-align: middle;
@@ -167,6 +198,8 @@ h3{
     margin-left: 17px;
     padding-right: 5px;
     font-weight: 300;
+    line-height: 32px;
+    display: inline-block;
 }
 .header .selectbox{
     display: inline-block;
@@ -498,14 +531,15 @@ h3{
     opacity: 0.8;
     filter: alpha(opacity=80);
     background-repeat: no-repeat;
-    background-image: url(../img/tipsy.gif);
+    background-image: url(../img/tipsy.png);
+    background-size: 501px 501px;
 }
 .tipsy-inner {
-    padding: 6px 10px 5px 10px;
-    background-color: black;
+    padding: 6px 10px 6px 10px;
+    background-color: #041725;
     color: white;
     max-width: 200px;
-    text-align: center;
+    text-align: left;
 }
 .tipsy-inner {
     border-radius:2px;
@@ -515,3 +549,9 @@ h3{
 .tipsy-east { background-position: right center; }
 .tipsy-west { background-position: left center; }
 
+/*=================Mapbox Style=================*/
+.leaflet-touch .leaflet-bar, .leaflet-touch .leaflet-control-layers{
+    border: 1px solid #E1E4E7;
+}
+.leaflet-bar a, .leaflet-control-layers-toggle, .leaflet-popup-close-button, .map-tooltip.closable .close, .mapbox-button-icon:before, .mapbox-icon{
+}

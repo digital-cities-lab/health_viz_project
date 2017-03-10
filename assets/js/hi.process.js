@@ -60,7 +60,7 @@ hi.process = {
 
             }
 
-            console.log(data);
+            //console.log(data);
         });
     },
     getProjection: function(){
@@ -108,7 +108,6 @@ hi.process = {
             //Relationship
             var matrix = [];
             for (var i = 0; i <= tractPtsArray.length - 1; i++) {
-                console.log(i);
                 matrix[i] = [];
                 for (var j = 0; j <= gridPtsArray.length - 1; j++) {
                     matrix[i][j] = (tractPtsArray[i][0] - gridPtsArray[j][0]) * (tractPtsArray[i][0] - gridPtsArray[j][0]) + (tractPtsArray[i][1] - gridPtsArray[j][1]) * (tractPtsArray[i][1] - gridPtsArray[j][1]);
@@ -118,7 +117,7 @@ hi.process = {
             var munkres = new Munkres();
             var relation = munkres.compute(matrix);
 
-            console.log(relation);
+            //console.log(relation);
             return relation;
         }
     },
@@ -149,7 +148,6 @@ hi.process = {
         var p80 = 0;
         var range = 0;
 
-        console.log(data);
         //use d3 to divide data into quintile groups
         $.each(data, function(){
             var first = data[0];
@@ -200,7 +198,7 @@ hi.process = {
             groupIndex = 2;
         }else if(groupThreshold.p20 < value && value <= groupThreshold.p40){
             groupIndex = 3;
-        }else if(groupThreshold.minVal < value && value <= groupThreshold.p20){
+        }else if(groupThreshold.minVal - 1 < value && value <= groupThreshold.p20){
             groupIndex = 4;
         }else{
             //color to indicate undefined data

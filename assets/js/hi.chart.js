@@ -349,7 +349,7 @@ hi.chart = {
         $.each(_this.healthData, function(index, item){
             var itemVal = item[_this.currentIndicatorCode];
             var groupIndex = _this.process.getGroupIndex(itemVal);
-            var objectId = item.OBJECTID;
+            var tractId = item.OBJECTID;
 
             $.each(_this.indicatorCodes, function(chartIndex, chartCode){
                 var tmpId = _this.indicatorIds[chartIndex]; //chart id
@@ -362,8 +362,9 @@ hi.chart = {
                 //calculate facilities count
                 if(tmpId === 'emergency' || tmpId === 'hospital'){
                     var facilityArray = _this.facilityProjection[tmpId];
-                    var facilityCount = facilityArray[objectId] && facilityArray[objectId].length ? facilityArray[objectId].length : 0;
+                    var facilityCount = facilityArray[tractId] && facilityArray[tractId].length ? facilityArray[tractId].length : 0;
                     tmp = facilityCount;
+                    _this.facilityCountData[tmpId][tractId] = tmp;
                 }else{
                     tmp = item[chartCode];
                 }
@@ -396,7 +397,7 @@ hi.chart = {
                         if(tmp !== ''){
                             matrixObject[tmpId][i].push({
                                 value: value,
-                                tractId: objectId,
+                                tractId: tractId,
                                 chartId: tmpId,
                                 pct: pct,
                                 rangeValue: item[_this.currentIndicatorCode],
