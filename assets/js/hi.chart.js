@@ -520,6 +520,8 @@ hi.chart = {
             var $parent = $('.chart-component').eq(index);
             _this.chart.updateTooltip($parent, '.tract_' + _this.lockedTractId);
         });
+
+        $('.chart-component .toolbar').show();
     },
     resetLocker: function(){
         var _this = hi;
@@ -529,6 +531,8 @@ hi.chart = {
 
         //hide tooltips
         _this.chart.closeTooltip();
+
+        $('.chart-component .toolbar').hide();
     },
     addEventListener: function(){
         var _this = hi;
@@ -555,6 +559,11 @@ hi.chart = {
 
                 _this.chart.setLockedCircle(parentSelector + ' ' + selector);
                 _this.chart.updateTooltip(parentSelector, selector);
+
+                var isChecked = $parent.find('.show-tooltip').is(':checked');
+                if(!isChecked){
+                    $parent.find('.tooltip').hide();
+                }
             }
         });
     },

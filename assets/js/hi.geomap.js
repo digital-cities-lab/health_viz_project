@@ -3,7 +3,8 @@ hi.geomap = {
         var _this = hi;
 
         //create map
-        var mapStyleUrl = 'mapbox://styles/xiaoxuezhang/ciy0tczyo005k2rqjn4oncbhp';
+        //var mapStyleUrl = 'mapbox://styles/xiaoxuezhang/ciy0tczyo005k2rqjn4oncbhp';
+        var mapStyleUrl = 'mapbox://styles/mapbox/light-v9';
         L.mapbox.accessToken = _this.accessToken;
 
         var map = L.map('map', {zoomControl: false})
@@ -11,7 +12,6 @@ hi.geomap = {
 
         L.mapbox.styleLayer(mapStyleUrl)
             .addTo(map);
-
 
         //add zoom control with your options
         L.control.zoom({
@@ -125,6 +125,8 @@ hi.geomap = {
                 fillColor: color,
                 fillOpacity: 1,
                 color: _this.strokeColor,
+                //color: '#44474E',
+                //color: color,
                 weight: 2,
                 opacity: 0
             };

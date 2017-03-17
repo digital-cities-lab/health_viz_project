@@ -60,8 +60,8 @@
         <span class="view-by">
             <label class="label">View by</label>
             <select class="selectbox selectbox-mid" id="map-type-select">
-                <option value="grid">Grid Map</option>
-                <option value="carto">Cartographic Map</option>
+                <option value="grid">Grid</option>
+                <option value="carto">Census Tract</option>
             </select>
         </span>
     </div>
@@ -105,6 +105,12 @@
                 </div>
                 <h3>Median Household Income, 2008-2012</h3>
             </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
+            </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-income">
                 </div>
@@ -120,6 +126,12 @@
                     <div class="button" data-type="pct" data-chart-id="weight">Percentage</div>
                 </div>
                 <h3>Low Birthweight Births, 2008-2012 <i class="icon-info" original-title="Low birthweight is a term used to describe babies who are born weighing less than 2,500 grams (5 pounds, 8 ounces). In contrast, the average newborn weighs about 8 pounds. "></i></h3>
+            </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-weight">
@@ -137,6 +149,12 @@
                 </div>
                 <h3>Teen Pregnancy, 2008-2012 <i class="icon-info" original-title="Teen Pregnancy is a term used to describe babies who are born to women aged 15–19 years."></i></h3>
             </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
+            </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-teen">
                 </div>
@@ -152,6 +170,12 @@
                     <div class="button" data-type="pct" data-chart-id="premature">Percentage</div>
                 </div>
                 <h3>Premature Births, 2008-2012 <i class="icon-info" original-title="Premature Births is used to describe babies who are born too early, before 37 weeks."></i></h3>
+            </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-premature">
@@ -169,6 +193,12 @@
                 </div>
                 <h3>Population without Health Insurance, 2008-2012</h3>
             </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
+            </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-insurance">
                 </div>
@@ -184,6 +214,12 @@
                 </div>
                 <h3>Hospital Community Facilities, 2012</h3>
             </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
+            </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-hospital">
                 </div>
@@ -198,6 +234,12 @@
                     <div class="button active" data-type="num" data-chart-id="emergency">Facilities</div>
                 </div>
                 <h3>Emergency Medical Service Community Facilities, 2012</h3>
+            </div>
+            <div class="toolbar-wrapper">
+                <form class="toolbar">
+                    <label class="switch-label">Tooltip</label>
+                    <input type="checkbox" class="show-tooltip" name="show_tooltip" value="1" />
+                </form>
             </div>
             <div class="chart-content-wrapper">
                 <div class="chart-content" id="chart-emergency">
@@ -220,6 +262,7 @@
 <script src="bower_components/tipsy/src/javascripts/jquery.tipsy.js"></script>
 <script src="bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
 <script src="bower_components/numeral/numeral.js"></script>
+<script src="bower_components/LC-switch/lc_switch.min.js"></script>
 <script src="assets/js/makefixed.js"></script>
 <!-- endbuild -->
 <!-- build:js ./assets/js/main.js -->
