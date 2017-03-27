@@ -551,8 +551,7 @@ h3{
 .tipsy {
     padding: 5px;
     font-size: 10px;
-    opacity: 0.8;
-    filter: alpha(opacity=80);
+    opacity: 0.9;
     background-repeat: no-repeat;
     background-image: url(../img/tipsy.png);
     background-size: 501px 501px;
@@ -563,6 +562,7 @@ h3{
     color: white;
     max-width: 200px;
     text-align: left;
+    line-height: 1.3em;
 }
 .tipsy-inner {
     border-radius:2px;
