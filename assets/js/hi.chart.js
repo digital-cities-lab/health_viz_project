@@ -519,9 +519,15 @@ hi.chart = {
         $.each($(selector), function(index){
             var $parent = $('.chart-component').eq(index);
             _this.chart.updateTooltip($parent, '.tract_' + _this.lockedTractId);
+
+            var isChecked = $parent.find('.show-tooltip').is(':checked');
+            if(!isChecked){
+                $parent.find('.tooltip').hide();
+            }
         });
 
-        $('.chart-component .toolbar').show();
+        $('.chart-component').find('.toolbar').show();
+
     },
     resetLocker: function(){
         var _this = hi;

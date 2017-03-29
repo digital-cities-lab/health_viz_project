@@ -75,7 +75,7 @@ h3{
 .map{
     position: fixed;
     left: 0;
-    top: 46px;
+    top: 47px;
     bottom: 0;
     right: 520px;
 }
@@ -105,8 +105,8 @@ h3{
     width: 100%;
     height: 47px;
     background-color: #ffffff;
-    z-index: 999;
-    position: fixed;
+    /* z-index: 11; */
+    position: relative;
     border-bottom: 1px solid #E2E3E5;
 }
 .header .logo{
@@ -144,7 +144,7 @@ h3{
     position: relative;
     width: 220px;
     height: 32px;
-    display: inline-block;
+    float: left;
     margin-right: 10px;
 }
 .header .searchbox .icon-search{
@@ -192,6 +192,10 @@ h3{
 }
 .header .filter *{
     vertical-align: middle;
+}
+.header .filter .show,
+.header .filter .view-by{
+    float: left;
 }
 .header .label{
     margin-left: 17px;
@@ -296,11 +300,11 @@ h3{
 .panel{
     background: #fff;
     width: 520px;
-    position: fixed;
+    position: absolute;
     right: 0;
     bottom: 0;
     top: 47px;
-    z-index: 998;
+    /* z-index: 1100; */
     border-left: 1px solid #E2E3E5;
     box-sizing: initial;
     overflow-y: auto;
@@ -681,3 +685,89 @@ h3{
     filter: alpha(opacity=65);
     cursor: default;
 }
+
+/*===============Modal================*/
+.modal{
+    width: 100%;
+    position: relative;
+}
+.modal .mask{
+    background-color: rgba(49,54,56,0.8);
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 11;
+}
+.modal .modal-container{
+    text-align: center;
+    z-index: 11;
+    background-color: #fff;
+    padding: 35px 30px 30px;
+    position: fixed;
+    width: 540px;
+    top: 50%;
+    left: 50%;
+    margin-left: -270px;
+    margin-top: -140px;
+}
+.modal h3{
+    text-transform: uppercase;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-family: "Roboto Condensed";
+    color: #313638;
+}
+.modal p{
+    font-size: 15px;
+    line-height: 24px;
+    margin-bottom: 32px;
+}
+.modal .btn-explore {
+    border: 1px solid #445266;
+    display: inline-block;
+    width: 220px;
+    height: 48px;
+    line-height: 47px;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.tour-backdrop{
+    background-color: rgba(49,54,56,0.8);
+}
+.tour-step-background{
+    border-radius: 0;
+}
+.popover{
+    border-radius: 2px;
+    font-family: Roboto;
+}
+.popover-title{
+    background-color: #f8f8f7;
+    border-bottom: 0 none;
+    border-radius: 0;
+    color: #313638;
+}
+.popover-content{
+    font-size: 13px;
+}
+.btn-sm, .btn-group-sm>.btn{
+    border-radius: 2px;
+}
+.btn-default{
+    border: 1px solid #E2E3E5;
+}
+.btn-default:focus{
+    outline: none;
+}
+.btn-default:hover,
+.btn-default:focus{
+    color: #313638;
+    border-color:#A4ADB7;
+    background-color: #E2E3E5;
+}
+

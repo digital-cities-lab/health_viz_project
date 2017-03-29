@@ -77,6 +77,58 @@ var hi = {
             gravity: 's'
         });
 
+
+        // Instance the tour
+        var tour = new Tour({
+            backdrop: true,
+            steps: [
+                {
+                    element: "#searchbox",
+                    title: "Find your place",
+                    content: 'e.g. "121 Baker St NW, Atlanta, GA 30313"',
+                    placement: "bottom",
+                    backdropPadding: 3
+                },
+                {
+                    element: "#map",
+                    title: "View grid map",
+                    content: "Each grid represents a census tract, a statistical subdivisions of a county with an optimum size of 4,000 people.",
+                    backdropPadding: 0
+                },
+                {
+                    element: "#range-slider-wrapper",
+                    title: "Change income range to compare",
+                    content: "The household income is grouped by quintile so that users can easily compare the poor and the rich. ",
+                    placement: "bottom",
+                    backdropPadding: 0
+                },
+                {
+                    element: ".view-by",
+                    title: "See real shape of a tract",
+                    content: "Change the map being drawn by the shapes of census tracts.",
+                    placement: "bottom",
+                    backdropPadding: 3
+                }
+            ]});
+
+        $('#btn-explore').on('click', function(e){
+            e.preventDefault();
+
+            $('#introductory').hide();
+
+            // Initialize the tour
+            tour.init();
+
+            // Start the tour
+            tour.start();
+        });
+
+        $('.show-tour').on('click', function(e){
+            e.preventDefault();
+
+            tour.restart();
+        });
+
         //change color pallette
         _this.currentColors = _this.groupColors;
 
