@@ -6,56 +6,12 @@
     <link href="https://fonts.googleapis.com/css?family=Hind:400,500|Montserrat|Roboto" rel="stylesheet">
     <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
 
-    <link rel="stylesheet" href="./assets/css/main-9dbc3881dd.css"/>
+    <link rel="stylesheet" href="./assets/css/main-a741ec56d0.css"/>
     <title>Health Inequity</title>
 </head>
 <body>
 <div class="page-loader" id="page-loader">
     <div class="loading-content">Loading Data...</div>
-</div>
-<div id="header" class="header">
-    <div class="help">
-        <a href="javascript:;"><i class="icon-help-circled icon"></i> Help</a>
-    </div>
-    <a href="./" title="Return Home" class="logo">
-        <img src="assets/img/logo.svg"/>
-        <div class="h-group">
-            <h1>Health Observatory</h1>
-            <div class="subtitle">In Atlanta, Georgia</div>
-        </div>
-    </a>
-    <div class="filter">
-        <form action="#" class="searchbox">
-            <input type="text" name="" id="search-location" class="input" placeholder="Search Your Address in Atlanta"/>
-            <a href="javascript:;" class="icon-search btn-search"></a>
-            <div class="auto-suggestions">
-                <ul>
-                </ul>
-            </div>
-        </form>
-        <span class="show">
-            <label class="label">Show</label>
-            <select class="selectbox selectbox-long" id="indicator-select">
-                <option value="income">Median Household Income</option>
-                <option value="weight">Low Birthweight Births</option>
-                <option value="teen">Teen Pregnancy</option>
-                <option value="premature">Premature Births</option>
-                <option value="insurance">Population without Health Insurance</option>
-                <!--<option value="hospital">Access to Hospital Community Facilities</option>-->
-                <!--<option value="emergency">Access to Emergency Medical Service Community Facilities</option>-->
-            </select>
-            <select class="selectbox" id="data-type-select">
-                <option value="num">Number</option>
-            </select>
-        </span>
-        <span class="view-by">
-            <label class="label">View by</label>
-            <select class="selectbox selectbox-mid" id="map-type-select">
-                <option value="grid">Grid</option>
-                <option value="carto">Census Tract</option>
-            </select>
-        </span>
-    </div>
 </div>
 <div class="map-component">
     <div id="map" class="map custom-popup"></div>
@@ -73,19 +29,21 @@
     <div class="content"></div>
 </div>
 <div class="panel" id="panel">
-    <div class="range-slider">
-        <div class="slider-title" id="slider-title"></div>
-        <input type="text" name="example_name" value="" id="range-slider"/>
-    </div>
-    <div class="chart-legend-container legend" id="chart-legend-container">
-        <div class="chart-legend" id="chart-legend">
-            <ul>
-                <li><i class="icon-circle bottom-fifth"></i> <label>Bottom Fifth</label><br/><i class="desp">0 Tracts</i></li>
-                <li><i class="icon-circle lower-middle"></i> <label>Lower Middle</label><br/><i class="desp">0 Tracts</i></li>
-                <li><i class="icon-circle middle-class"></i> <label>Middle</label><br/><i class="desp">0 Tracts</i></li>
-                <li><i class="icon-circle upper-middle"></i> <label>Upper Middle</label><br/><i class="desp">0 Tracts</i></li>
-                <li><i class="icon-circle top-fifth"></i> <label>Top Fifth</label><br/><i class="desp">0 Tracts</i></li>
-            </ul>
+    <div id="range-slider-wrapper">
+        <div class="range-slider">
+            <div class="slider-title" id="slider-title"></div>
+            <input type="text" name="example_name" value="" id="range-slider"/>
+        </div>
+        <div class="chart-legend-container legend" id="chart-legend-container">
+            <div class="chart-legend" id="chart-legend">
+                <ul>
+                    <li><i class="icon-circle bottom-fifth"></i> <label>Bottom Fifth</label><br/><i class="desp">0 Tracts</i></li>
+                    <li><i class="icon-circle lower-middle"></i> <label>Lower Middle</label><br/><i class="desp">0 Tracts</i></li>
+                    <li><i class="icon-circle middle-class"></i> <label>Middle</label><br/><i class="desp">0 Tracts</i></li>
+                    <li><i class="icon-circle upper-middle"></i> <label>Upper Middle</label><br/><i class="desp">0 Tracts</i></li>
+                    <li><i class="icon-circle top-fifth"></i> <label>Top Fifth</label><br/><i class="desp">0 Tracts</i></li>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="panel-content">
@@ -243,10 +201,67 @@
     </div>
 </div>
 
+<div id="header" class="header">
+    <div class="help">
+        <a href="javascript:;" class="show-tour"><i class="icon-help-circled icon"></i> Show Tour</a>
+    </div>
+    <a href="./" title="Return Home" class="logo">
+        <img src="assets/img/logo.svg"/>
+        <div class="h-group">
+            <h1>Health Observatory</h1>
+            <div class="subtitle">In Atlanta, Georgia</div>
+        </div>
+    </a>
+    <div class="filter">
+        <form action="#" class="searchbox" id="searchbox">
+            <input type="text" name="" id="search-location" class="input" placeholder="Search Your Address in Atlanta"/>
+            <a href="javascript:;" class="icon-search btn-search"></a>
+            <div class="auto-suggestions">
+                <ul>
+                </ul>
+            </div>
+        </form>
+        <span class="show">
+            <label class="label">Show</label>
+            <select class="selectbox selectbox-long" id="indicator-select">
+                <option value="income">Median Household Income</option>
+                <option value="weight">Low Birthweight Births</option>
+                <option value="teen">Teen Pregnancy</option>
+                <option value="premature">Premature Births</option>
+                <option value="insurance">Population without Health Insurance</option>
+                <!--<option value="hospital">Access to Hospital Community Facilities</option>-->
+                <!--<option value="emergency">Access to Emergency Medical Service Community Facilities</option>-->
+            </select>
+            <select class="selectbox" id="data-type-select">
+                <option value="num">Number</option>
+            </select>
+        </span>
+        <span class="view-by">
+            <label class="label">View by</label>
+            <select class="selectbox selectbox-mid" id="map-type-select">
+                <option value="grid">Grid</option>
+                <option value="carto">Census Tract</option>
+            </select>
+        </span>
+    </div>
+</div>
+
+<div class="introductory modal" id="introductory">
+    <div class="mask"></div>
+    <div class="modal-container">
+        <div class="modal-cnt">
+            <h3>Health Observatory in Atlanta</h3>
+            <p>This project shows the exact data on health for each of the tracts in Atlanta, taken from US census. It focusses on showing the inequity on health access, and allows comparison between tracts.</p>
+            <a href="javascript:;" class="btn-explore" id="btn-explore">Explore</a>
+
+        </div>
+    </div>
+</div>
+
 <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
-<script src="./assets/js/plugins-f052bb3e20.js"></script>
-<script src="./assets/js/main-d9f8812fdb.js"></script>
+<script src="./assets/js/plugins-80112013c5.js"></script>
+<script src="./assets/js/main-aa99f88f7e.js"></script>
 </body>
 </html>
