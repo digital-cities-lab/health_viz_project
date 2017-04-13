@@ -295,13 +295,13 @@ hi.geomap = {
             hospital: {
                 name: _this.indicatorNames[5],
                 num: _this.facilityCountData.hospital[tractId],
-                max: 2
+                max: 3
 
             },
             emergency: {
                 name: _this.indicatorNames[6],
                 num: _this.facilityCountData.emergency[tractId],
-                max: 4
+                max: 5
             },
             demographic: {
                 education: {
