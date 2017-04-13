@@ -367,6 +367,22 @@ h3{
     /* padding-top: 1px; */
     vertical-align: middle;
 }
+.chart-component .empty-data{
+    background-color: rgba(255,255,255,0.9);
+    margin: 0 auto;
+    text-align: center;
+    line-height: 200px;
+    padding: 10px;
+    /* float: left; */
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    font-size: 14px;
+    height: 100%;
+    /* color: #000; */
+    display: none;
+}
 
 
 /*===========slider========*/
@@ -479,6 +495,10 @@ h3{
     text-align: right;
     float: right;
     padding-top:10px;
+    opacity: 0.8;
+}
+.map-popup-container .link:hover{
+    opacity: 1;
 }
 .map-popup{
     font-size: 11px;
@@ -497,6 +517,13 @@ h3{
 .map-popup table{
     width: 100%;
     table-layout: fixed;
+}
+.map-popup .table_title{
+    clear: both;
+    font-weight: bolder;
+    padding-top: 15px;
+    margin-bottom: 5px;
+    font-size: 12px;
 }
 .map-popup th,
 .map-popup td{
@@ -529,6 +556,35 @@ h3{
     margin-bottom: 4px;
     color: #313638;
 }
+.map-popup .show-more-info{
+
+}
+.map-popup .show-more-info .icon{
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    float: right;
+    padding: 0 3px;
+    line-height: 18px;
+}
+.map-popup .show-more-info .show-text{
+    display: inline;
+}
+.map-popup .show-more-info .hide-text{
+    display: none;
+}
+.map-popup .is-shown .icon{
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.map-popup .is-shown .show-text{
+    display: none;
+}
+.map-popup .is-shown .hide-text{
+    display: inline;
+}
+.map-popup .more-info{
+    display: none;
+}
 
 /*=================Tooltip====================*/
 .tooltip {
@@ -536,7 +592,7 @@ h3{
     padding: 8px;
     background: rgba(255, 255, 255, 0.95);
     pointer-events: none;
-    z-index: 999;
+    /* z-index: 1; */
     box-shadow: 0 1px 4px rgba(10, 20, 30, 0.3);
     line-height: 16px;
     font-size: 11px;

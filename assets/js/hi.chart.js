@@ -440,6 +440,11 @@ hi.chart = {
 
         _this.chart.stopLoading();
     },
+    createPixelBarChart: function(options){
+        var container = svg.append("g")
+            .attr("height", boxHeight + boxMarginBottom)
+            .attr("transform", "translate(0, " + (boxHeight + boxMarginBottom) * groupIndex + ")");
+    },
     createChartLegend: function(){
         //show boxplot legend
         var _this = hi;
@@ -514,6 +519,16 @@ hi.chart = {
 
         //lock dots
         _this.chart.setLockedCircle(selector);
+
+        //update empty data message
+        $.each($('.chart-component'), function(){
+            var $this = $(this);
+            $this.find('.empty-data').hide();
+
+            if($this.find(selector).length === 0){
+                $this.find('.empty-data').show();
+            }
+        });
 
         //update tooltips
         $.each($(selector), function(index){
@@ -609,17 +624,18 @@ hi.chart = {
         elements
             .attr('r', 5)
             /*.style({
-                'stroke': _this.strokeColor,
-                'stroke-width': 2,
-                'fill': _this.strokeColor,
-                'stroke-opacity': 1
-            })*/
+             'stroke': _this.strokeColor,
+             'stroke-width': 2,
+             'fill': _this.strokeColor,
+             'stroke-opacity': 1
+             })*/
             .attr('stroke', _this.strokeColor)
             .attr('stroke-width', 2)
             .attr('fill', _this.strokeColor)
             .attr('stroke-opacity', 1)
             .classed('is-locked', true)
             .moveToFront();
+
     },
     resetLockedCircle: function(selector){
         var _this = hi;

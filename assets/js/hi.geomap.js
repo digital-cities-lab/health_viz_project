@@ -302,12 +302,34 @@ hi.geomap = {
                 name: _this.indicatorNames[6],
                 num: _this.facilityCountData.emergency[tractId],
                 max: 4
+            },
+            demographic: {
+                education: {
+                    title: "Educational Attainment 2012",
+                    name: ["Population with Less than a High School or GED Education",
+                        "Population with a Bachelor's Degree or Higher"],
+                    num: [properties.Less_than_HS_or_GED, properties.BA_or_Higher],
+                    pct: [properties.Pct_Less_than_HS_or_GED, properties.Pct_BA_or_Higher]
+                },
+                unemployment:{
+                    title: "Unemployment 2012",
+                    name: ["Population with 16 Years and Over", "Civilian Labor Force", "Civilian Labor Force Unemployed"],
+                    num: [properties.Pop_16_Years_and_Over, properties.CivilLaborForce, properties.Unemp_CivilLaborForce],
+                    pct: ['', properties.Pct_CivilLaborForce, properties.Pct_Unempl_CivilLaborForce]
+                }
             }
         };
 
         var content = template('map-popup', data);
 
         $popup.find('.content').html(content).end().show();
+
+        $popup.find('.show-more-info').on('click', function(e){
+            e.preventDefault();
+
+            $(this).toggleClass('is-shown');
+            $('.more-info').toggle();
+        });
 
         function format(num){
             return numeral(num).format('0.00%');

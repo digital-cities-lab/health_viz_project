@@ -49,5 +49,46 @@
         </tr>
         </tbody>
     </table>
-    <a href="javascript:;" class="link">Geographic Data</a>
+    <a href="javascript:;" class="link show-more-info"><div class="icon"><i class="icon-down-dir"></i></div><span class="show-text">Show</span><span class="hide-text">Hide</span> Demographic Data </a>
+    <div class="more-info">
+        <div class="table_title">{{demographic.education.title}}</div>
+        <table>
+            <thead>
+            <tr>
+                <th class="indicator">Indicator</th>
+                <th class="num">NUM.</th>
+                <th class="pct">PCT.</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each demographic.education.name}}
+            <tr>
+                <td class="indicator">{{demographic.education.name[$index]}}</td>
+                <td>{{demographic.education.num[$index]}}</td>
+                <td>{{demographic.education.pct[$index]}}%</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        <div class="table_title">{{demographic.unemployment.title}}</div>
+        <table>
+            <thead>
+            <tr>
+                <th class="indicator">Indicator</th>
+                <th class="num">NUM.</th>
+                <th class="pct">PCT.</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each demographic.unemployment.name}}
+            <tr>
+                <td class="indicator">{{demographic.unemployment.name[$index]}}</td>
+                <td>{{demographic.unemployment.num[$index]}}</td>
+                <td>{{demographic.unemployment.pct[$index]}}{{if demographic.unemployment.pct[$index] !== ''}}%{{/if}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>

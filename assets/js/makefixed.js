@@ -16,7 +16,7 @@ $.fn.makeFixed = function (options)
 	var defOpts = $.extend({
 		// These are the defaults.
 		defTopPos: 0,
-		defZIndex: 10000,
+		defZIndex: 1,
 		container: 'window'
 	}, options );
 
